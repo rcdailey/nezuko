@@ -1,0 +1,47 @@
+networks:
+  reverse_proxy:
+    external: true
+    driver: overlay
+  dockerproxy:
+
+services:
+  dockerproxy:
+    image: ghcr.io/tecnativa/docker-socket-proxy:0.1.2
+    restart: unless-stopped
+    container_name: dockerproxy
+    networks: [dockerproxy]
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - CONTAINERS=1
+      - POST=0
+
+  swag:
+    image: ghcr.io/linuxserver/swag:2.10.0
+    restart: unless-stopped
+    container_name: swag
+    networks: [reverse_proxy, dockerproxy]
+    depends_on: [dockerproxy]
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+    ports:
+      - 30080:80
+      - 30443:443
+    volumes:
+      - ./config:/config
+    env_file: [.env]
+    environment:
+      TZ: America/Chicago
+      PUID: $DOCKER_UID
+      PGID: $DOCKER_GID
+      DOCKER_HOST: dockerproxy
+      DOCKER_MODS: >-
+        linuxserver/mods:universal-docker|
+        linuxserver/mods:swag-auto-reload|
+        linuxserver/mods:swag-auto-proxy

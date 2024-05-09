@@ -1,0 +1,19 @@
+networks:
+  reverse_proxy:
+    external: true
+    driver: overlay
+
+services:
+  homer:
+    image: b4bz/homer:v24.04.1
+    container_name: homer
+    restart: unless-stopped
+    networks: [reverse_proxy]
+    user: $DOCKER_UID:$DOCKER_GID
+    init: true
+    # ports:
+    #   - 8080:8080
+    volumes:
+      - ./assets:/www/assets
+    environment:
+      - TZ=America/Chicago
