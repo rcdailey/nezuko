@@ -1,0 +1,18 @@
+volumes:
+  tmp:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+
+services:
+  pbf:
+    image: meisnate12/plex-image-cleanup:v1.0.2
+    network_mode: bridge
+    user: $DOCKER_UID:$DOCKER_GID
+    init: true
+    environment:
+      - TZ=America/Chicago
+    volumes:
+      - ./data:/config
+      - /mnt/fast/docker/media/plex/config:/plex
+      - tmp:/tmp

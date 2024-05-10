@@ -1,9 +1,5 @@
-*
-
-!.gitignore
-!.gitattributes
-!.vscode/
-
-!*/
+# Ignore contents of all subdirectories by default, which is usually the compose projects.
 */*
+
+!.vscode/
 !*/docker-compose.yml

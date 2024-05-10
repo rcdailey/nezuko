@@ -1,0 +1,57 @@
+name: nextcloud
+
+volumes:
+  redis-data:
+
+networks:
+  private:
+  reverse_proxy:
+    external: true
+    driver: overlay
+
+services:
+  db:
+    image: lscr.io/linuxserver/mariadb:10.11.6
+    restart: unless-stopped
+    networks:
+      - private
+    environment:
+      - TZ=America/Chicago
+      - PUID=$DOCKER_UID
+      - PGID=$DOCKER_GID
+    env_file:
+      - db.env
+    volumes:
+      - ./mariadb:/config
+
+  redis:
+    image: redis:7.2.4
+    restart: unless-stopped
+    networks:
+      - private
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - redis-data:/data
+
+  app:
+    image: lscr.io/linuxserver/nextcloud:29.0.0
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    # ports:
+    #   - 30001:80
+    networks:
+      private:
+      reverse_proxy:
+        aliases:
+          - nextcloud
+    volumes:
+      - ./nextcloud:/config
+      - /mnt/user/nextcloud:/data
+    environment:
+      - TZ=America/Chicago
+      - PUID=$DOCKER_UID
+      - PGID=$DOCKER_GID
+    env_file:
+      - db.env
