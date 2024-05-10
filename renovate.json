@@ -10,7 +10,7 @@
     },
     {
       "matchPackageNames": ["docker.io/library/postgres"],
-      "customChangelogUrl": "https://github.com/docker-library/postgres"
+      "customChangelogUrl": "https://github.com/postgres/postgres"
     }
   ]
 }
