@@ -7,6 +7,10 @@
       "groupSlug": "all-patch",
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["patch"]
+    },
+    {
+      "matchPackageNames": ["docker.io/library/postgres"],
+      "customChangelogUrl": "https://github.com/docker-library/postgres"
     }
   ]
 }
