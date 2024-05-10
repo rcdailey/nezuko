@@ -1,0 +1,39 @@
+volumes:
+  junk:
+
+services:
+  borgmatic:
+    image: ghcr.io/borgmatic-collective/borgmatic:1.8.11
+    container_name: borgmatic
+    restart: unless-stopped
+    network_mode: bridge
+    cap_add:
+      - SYS_ADMIN # Required for FUSE
+    devices:
+      - /dev/fuse
+    security_opt:
+      - label:disable
+      - apparmor:unconfined
+    environment:
+      - TZ=America/Chicago
+      - DOCKER_UID=$DOCKER_UID
+      - DOCKER_GID=$DOCKER_GID
+    volumes:
+      - junk:/mnt/source
+      - ./data/borg/repo:/mnt/borg-repository
+      - junk:/root/.borgmatic
+      - ./data/borgmatic:/etc/borgmatic.d
+      - ./data/borg/config:/root/.config/borg
+      - ./data/ssh:/root/.ssh
+      - ./data/borg/cache:/root/.cache/borg
+
+      # For doing a 'borgmatic mount' to restore files
+      - ./restore:/restore
+
+      # Mount backup paths on the host
+      - /boot:/boot:ro
+      - /mnt/user:/mnt/user:ro
+
+      # For the after/before backup script
+      - /mnt/fast/docker:/mnt/fast/docker
+      - /var/run/docker.sock:/var/run/docker.sock

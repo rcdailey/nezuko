@@ -1,0 +1,89 @@
+name: authentik
+
+networks:
+  private:
+  reverse_proxy:
+    external: true
+    driver: overlay
+
+services:
+  postgresql:
+    image: docker.io/library/postgres:12-alpine
+    restart: unless-stopped
+    networks: [private]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    env_file: [.env]
+    environment:
+      - POSTGRES_PASSWORD=${PG_PASS}
+      - POSTGRES_USER=authentik
+      - POSTGRES_DB=authentik
+
+  redis:
+    image: docker.io/library/redis:alpine
+    command: --save 60 1 --loglevel warning
+    restart: unless-stopped
+    networks: [private]
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    volumes:
+      - ./redis:/data
+
+  server:
+    image: ghcr.io/goauthentik/server:2024.4.2
+    restart: unless-stopped
+    command: server
+    container_name: authentik
+    # ports:
+    #   - 30002:9000
+    networks:
+      private:
+      reverse_proxy:
+        # This is required for SWAG's auto proxy, because the `authentik.subdomain.conf` uses
+        # hostname `authentik-server` instead of the container name. Auto-detection matches the file
+        # name, not the hostname used in the file.
+        aliases: [authentik-server]
+    env_file: [.env]
+    environment: &authentik_envs
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      # AUTHENTIK_ERROR_REPORTING__ENABLED: "true"
+    volumes:
+      - ./media:/media
+      - ./custom-templates:/templates
+      - ./geoip:/geoip
+    labels:
+      - swag=enable
+      # - swag_address=authentik-server
+      - swag_url=auth.*
+
+  worker:
+    image: ghcr.io/goauthentik/server:2024.4.2
+    restart: unless-stopped
+    command: worker
+    networks: [private]
+    env_file: [.env]
+    environment: *authentik_envs
+    # This is optional, and can be removed. If you remove this, the following will happen
+    # - The permissions for the /media folders aren't fixed, so make sure they are 1000:1000
+    # - The docker socket can't be accessed anymore
+    user: root
+    volumes:
+      - ./media:/media
+      - ./custom-templates:/templates
+      - ./geoip:/geoip
+      - ./certs:/certs
+      - /var/run/docker.sock:/var/run/docker.sock

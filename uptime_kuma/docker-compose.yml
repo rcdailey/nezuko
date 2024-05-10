@@ -1,0 +1,19 @@
+networks:
+  reverse_proxy:
+    external: true
+    driver: overlay
+
+services:
+  app:
+    image: louislam/uptime-kuma:1.23.13
+    restart: unless-stopped
+    container_name: uptime
+    networks:
+      - reverse_proxy
+    # ports:
+    #   - 3001:3001
+    volumes:
+      - ./data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TZ=America/Chicago
