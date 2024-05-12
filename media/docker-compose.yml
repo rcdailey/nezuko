@@ -4,7 +4,6 @@ networks:
     driver: overlay
   pmm_network:
   recyclarr:
-  # qbit_network:
 
 volumes:
   plex-transcode:
@@ -12,15 +11,20 @@ volumes:
       type: tmpfs
       device: tmpfs
 
+x-logging: &logging
+  driver: json-file
+  options:
+    max-file: "1"
+    max-size: "50m"
+
 services:
   #########################################################################
   plex:
     image: ghcr.io/hotio/plex:release-1.40.2.8395-c67dce28e
     restart: unless-stopped
     container_name: plex
-    networks:
-      - pmm_network
-      - reverse_proxy
+    logging: *logging
+    networks: [pmm_network, reverse_proxy]
     ports:
       - 32400:32400
       # - 1900:1900/udp
@@ -42,14 +46,16 @@ services:
       - PUID=$DOCKER_UID
       - PGID=$DOCKER_GID
       - PLEX_PASS=yes
+    labels:
+      - swag=enable
 
   #########################################################################
   sabnzbd:
     image: ghcr.io/hotio/sabnzbd:release-4.3.1
     restart: unless-stopped
     container_name: sabnzbd
-    networks:
-      - reverse_proxy
+    logging: *logging
+    networks: [reverse_proxy]
     # ports:
     #   - 8080:8080
     volumes:
@@ -70,8 +76,8 @@ services:
     image: ghcr.io/hotio/qbittorrent:release-4.6.4
     # restart: unless-stopped
     container_name: qbittorrent
-    networks:
-      - reverse_proxy
+    logging: *logging
+    networks: [reverse_proxy]
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
       - net.ipv4.conf.all.src_valid_mark=1
@@ -98,19 +104,18 @@ services:
       - VPN_FIREWALL_TYPE=nftables
       - PRIVOXY_ENABLED=false
       - FLOOD_AUTH=false
-    logging:
-      driver: json-file
-      options:
-        max-file: "1"
-        max-size: "50m"
+    labels:
+      - swag=enable
+      - swag_auth=authentik
+      - swag_url=torrent.*
 
   #########################################################################
   prowlarr:
     image: ghcr.io/hotio/prowlarr:release-1.16.2.4435
     restart: unless-stopped
     container_name: prowlarr
-    networks:
-      - reverse_proxy
+    logging: *logging
+    networks: [reverse_proxy]
     # ports:
     #   - 9696:9696
     environment:
@@ -126,9 +131,8 @@ services:
     image: ghcr.io/hotio/sonarr:release-4.0.4.1491
     restart: unless-stopped
     container_name: sonarr
-    networks:
-      - recyclarr
-      - reverse_proxy
+    logging: *logging
+    networks: [recyclarr, reverse_proxy]
     # ports:
     #  - 30004:8989
     environment:
@@ -144,9 +148,8 @@ services:
     image: ghcr.io/hotio/sonarr:release-4.0.4.1491
     restart: unless-stopped
     container_name: sonarr_anime
-    networks:
-      - recyclarr
-      - reverse_proxy
+    logging: *logging
+    networks: [recyclarr, reverse_proxy]
     # ports:
     #  - 30005:8989
     environment:
@@ -162,9 +165,8 @@ services:
     image: ghcr.io/hotio/radarr:release-5.4.6.8723
     restart: unless-stopped
     container_name: radarr
-    networks:
-      - recyclarr
-      - reverse_proxy
+    logging: *logging
+    networks: [recyclarr, reverse_proxy]
     # ports:
     #  - 7878:7878
     volumes:
@@ -180,10 +182,8 @@ services:
     image: ghcr.io/hotio/radarr:release-5.4.6.8723
     restart: unless-stopped
     container_name: radarr4k
-    networks:
-      - recyclarr
-      - pmm_network
-      - reverse_proxy
+    logging: *logging
+    networks: [recyclarr, pmm_network, reverse_proxy]
     # ports:
     #   - 7879:7878
     volumes:
@@ -199,10 +199,8 @@ services:
     image: ghcr.io/hotio/radarr:release-5.4.6.8723
     restart: unless-stopped
     container_name: radarr_anime
-    networks:
-      - recyclarr
-      - pmm_network
-      - reverse_proxy
+    logging: *logging
+    networks: [recyclarr, pmm_network, reverse_proxy]
     # ports:
     #   - 7878:7878
     volumes:
@@ -218,8 +216,8 @@ services:
     image: meisnate12/plex-meta-manager:v1.21.0
     restart: unless-stopped
     container_name: pmm
-    networks:
-      - pmm_network
+    logging: *logging
+    networks: [pmm_network]
     volumes:
       - ./plexmetamanager:/config
     environment:
@@ -228,19 +226,14 @@ services:
       - PGID=$DOCKER_GID
       # - PMM_RUN=True # DISABLE WHEN DONE TESTING!!!
       - PMM_TIME=01:00,09:00,12:00,15:00,18:00,21:00
-    logging:
-      driver: json-file
-      options:
-        max-file: "1"
-        max-size: "50m"
 
   #########################################################################
   bazarr:
     image: ghcr.io/linuxserver/bazarr:1.4.2
     restart: unless-stopped
     container_name: bazarr
-    networks:
-      - reverse_proxy
+    logging: *logging
+    networks: [reverse_proxy]
     # ports:
     #   - 6767:6767
     volumes:
@@ -261,8 +254,8 @@ services:
     image: ghcr.io/hotio/tautulli:release-2.13.4
     restart: unless-stopped
     container_name: tautulli
-    networks:
-      - reverse_proxy
+    logging: *logging
+    networks: [reverse_proxy]
     # ports:
     #  - 8181:8181
     volumes:
@@ -280,8 +273,8 @@ services:
     image: ghcr.io/hotio/overseerr:release-1.33.2
     restart: unless-stopped
     container_name: overseerr
-    networks:
-      - reverse_proxy
+    logging: *logging
+    networks: [reverse_proxy]
     # ports:
     #  - 5055:5055
     volumes:
@@ -297,8 +290,8 @@ services:
     image: ghcr.io/hotio/unpackerr:release-0.13.1
     restart: unless-stopped
     container_name: unpackerr
-    networks:
-      - reverse_proxy
+    logging: *logging
+    networks: [reverse_proxy]
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./unpackerr:/config
@@ -314,6 +307,7 @@ services:
     restart: unless-stopped
     user: $DOCKER_UID:$DOCKER_GID
     container_name: recyclarr
+    logging: *logging
     networks: [recyclarr]
     volumes:
       - ./recyclarr-data:/config

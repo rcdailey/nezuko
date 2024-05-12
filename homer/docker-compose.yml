@@ -17,3 +17,6 @@ services:
       - ./assets:/www/assets
     environment:
       - TZ=America/Chicago
+    labels:
+      - swag=enable
+      - swag_url=home.*
