@@ -67,7 +67,6 @@ services:
       - ./geoip:/geoip
     labels:
       - swag=enable
-      # - swag_address=authentik-server
       - swag_url=auth.*
 
   worker:

@@ -186,6 +186,9 @@ services:
       - TZ=America/Chicago
       - PUID=$DOCKER_UID
       - PGID=$DOCKER_GID
+    labels:
+      - swag=enable
+      - swag_auth=authentik
 
   #########################################################################
   radarr4k:
@@ -277,6 +280,9 @@ services:
       - TZ=America/Chicago
       - PUID=$DOCKER_UID
       - PGID=$DOCKER_GID
+    labels:
+      - swag=enable
+      - swag_auth=authentik
 
   #########################################################################
   overseerr:
@@ -294,6 +300,9 @@ services:
       - PUID=$DOCKER_UID
       - PGID=$DOCKER_GID
       # - LOG_LEVEL=info
+    labels:
+      - swag=enable
+      - swag_url=request.*
 
   #########################################################################
   unpackerr:
