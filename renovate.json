@@ -11,6 +11,10 @@
     {
       "matchPackageNames": ["docker.io/library/postgres"],
       "customChangelogUrl": "https://github.com/postgres/postgres"
+    },
+    {
+      "matchPackageNames": ["getmeili/meilisearch"],
+      "customChangelogUrl": "https://github.com/meilisearch/meilisearch"
     }
   ]
 }
