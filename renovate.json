@@ -15,6 +15,10 @@
     {
       "matchPackageNames": ["getmeili/meilisearch"],
       "customChangelogUrl": "https://github.com/meilisearch/meilisearch"
+    },
+    {
+      "matchPackagePatterns": ["danny-avila/librechat-rag-api-dev-lite$"],
+      "customChangelogUrl": "https://github.com/danny-avila/rag_api"
     }
   ]
 }
