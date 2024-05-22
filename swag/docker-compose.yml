@@ -44,4 +44,5 @@ services:
       DOCKER_MODS: >-
         linuxserver/mods:universal-docker|
         linuxserver/mods:swag-auto-reload|
-        linuxserver/mods:swag-auto-proxy
+        ghcr.io/rcdailey/docker-mods:swag-auto-proxy
+      #linuxserver/mods:swag-auto-proxy

@@ -168,6 +168,8 @@ services:
     labels:
       - swag=enable
       - swag_auth=authentik
+      - swag_conf=sonarr
+      - swag_address=sonarr_anime
       - swag_url=sonarr-anime.*
 
   #########################################################################
@@ -206,6 +208,12 @@ services:
       - TZ=America/Chicago
       - PUID=$DOCKER_UID
       - PGID=$DOCKER_GID
+    labels:
+      - swag=enable
+      - swag_auth=authentik
+      - swag_conf=radarr
+      - swag_address=radarr4k
+      - swag_url=radarr4k.*
 
   #########################################################################
   radarr_anime:
@@ -223,6 +231,12 @@ services:
       - TZ=America/Chicago
       - PUID=$DOCKER_UID
       - PGID=$DOCKER_GID
+    labels:
+      - swag=enable
+      - swag_auth=authentik
+      - swag_conf=radarr
+      - swag_address=radarr_anime
+      - swag_url=radarr-anime.*
 
   #########################################################################
   pmm:
