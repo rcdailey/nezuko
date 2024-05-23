@@ -24,6 +24,10 @@
     {
       "matchPackagePatterns": ["danny-avila/librechat-rag-api-dev-lite$"],
       "customChangelogUrl": "https://github.com/danny-avila/rag_api"
+    },
+    {
+      "matchPackageNames": ["b4bz/homer"],
+      "customChangelogUrl": "https://github.com/bastienwirtz/homer"
     }
   ]
 }
