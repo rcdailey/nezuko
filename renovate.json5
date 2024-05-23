@@ -1,6 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:recommended",
+    ":disableRateLimiting",
+    "schedule:daily"
+  ],
+  "minimumReleaseAge": "5 days",
   "packageRules": [
     {
       "groupName": "all patch dependencies",
