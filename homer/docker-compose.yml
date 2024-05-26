@@ -5,7 +5,7 @@ networks:
 
 services:
   homer:
-    image: b4bz/homer:v24.04.1
+    image: b4bz/homer:v24.05.1
     container_name: homer
     restart: unless-stopped
     networks: [reverse_proxy]
