@@ -28,6 +28,10 @@
     {
       "matchPackageNames": ["b4bz/homer"],
       "customChangelogUrl": "https://github.com/bastienwirtz/homer"
+    },
+    {
+      "matchPackageNames": ["lscr.io/linuxserver/nextcloud"],
+      "customChangelogUrl": "https://github.com/nextcloud/server"
     }
   ]
 }
