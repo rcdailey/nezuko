@@ -11,7 +11,7 @@ networks:
 
 services:
   app:
-    image: lscr.io/linuxserver/nextcloud:29.0.0
+    image: lscr.io/linuxserver/nextcloud:29.0.1
     restart: unless-stopped
     container_name: nextcloud
     depends_on: [db, redis]
@@ -45,7 +45,7 @@ services:
       - ./mariadb:/config
 
   redis:
-    image: redis:7.2.4
+    image: redis:7.2.5
     restart: unless-stopped
     networks: [private]
     volumes:
