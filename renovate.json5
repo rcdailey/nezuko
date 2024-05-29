@@ -32,6 +32,10 @@
     {
       "matchPackageNames": ["lscr.io/linuxserver/nextcloud"],
       "customChangelogUrl": "https://github.com/nextcloud/server"
+    },
+    {
+      "matchPackageNames": ["redis"],
+      "customChangelogUrl": "https://github.com/redis/redis"
     }
   ]
 }
