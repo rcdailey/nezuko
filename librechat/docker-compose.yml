@@ -42,7 +42,7 @@ services:
       - swag_url=ai.*
 
   mongodb:
-    image: mongo:7.0.9
+    image: mongo:7.0.11
     restart: unless-stopped
     networks:
       - private
