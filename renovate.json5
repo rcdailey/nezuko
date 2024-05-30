@@ -36,6 +36,10 @@
     {
       "matchPackageNames": ["redis"],
       "customChangelogUrl": "https://github.com/redis/redis"
+    },
+    {
+      "matchPackageNames": ["mongo"],
+      "customChangelogUrl": "https://www.mongodb.com/docs/manual/release-notes/"
     }
   ]
 }
