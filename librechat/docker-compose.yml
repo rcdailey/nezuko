@@ -35,6 +35,7 @@ services:
         target: /app/.env
       - ./images:/app/client/public/images
       - ./logs:/app/api/logs
+      - ./uploads:/app/uploads/temp
       - ./librechat.yaml:/app/librechat.yaml
     labels:
       - swag=enable
