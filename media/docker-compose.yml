@@ -168,7 +168,8 @@ services:
     labels:
       - swag=enable
       - swag_auth=authentik
-      - swag_conf=sonarr
+      - swag_auth_bypass=/api
+      - swag_port=8989
       - swag_address=sonarr_anime
       - swag_url=sonarr-anime.*
 
@@ -211,7 +212,8 @@ services:
     labels:
       - swag=enable
       - swag_auth=authentik
-      - swag_conf=radarr
+      - swag_auth_bypass=/api
+      - swag_port=7878
       - swag_address=radarr4k
       - swag_url=radarr4k.*
 
@@ -234,7 +236,8 @@ services:
     labels:
       - swag=enable
       - swag_auth=authentik
-      - swag_conf=radarr
+      - swag_auth_bypass=/api
+      - swag_port=7878
       - swag_address=radarr_anime
       - swag_url=radarr-anime.*
 
