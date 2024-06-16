@@ -77,7 +77,7 @@ services:
       - pgdata2:/var/lib/postgresql/data
 
   rag_api:
-    image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:latest@sha256:f6cacdae1ec45ace77d263a789cf9e815763afed0a65a89a8eb6ef9da1b0e52f
+    image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:latest@sha256:718b7f92d0ac4ee921cda6f16867b38e2a0b6da6c5f59b865bc909fda68aba29
     restart: unless-stopped
     networks:
       - private
