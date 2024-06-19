@@ -22,8 +22,12 @@
       "customChangelogUrl": "https://github.com/meilisearch/meilisearch"
     },
     {
-      "matchPackagePatterns": ["danny-avila/librechat-rag-api-dev-lite$"],
+      "matchPackageNames": ["ghcr.io/danny-avila/librechat-rag-api-dev-lite"],
       "customChangelogUrl": "https://github.com/danny-avila/rag_api"
+    },
+    {
+      "matchPackageNames": ["ghcr.io/danny-avila/librechat"],
+      "customChangelogUrl": "https://github.com/danny-avila/LibreChat"
     },
     {
       "matchPackageNames": ["b4bz/homer"],
@@ -40,6 +44,6 @@
     {
       "matchPackageNames": ["mongo"],
       "customChangelogUrl": "https://www.mongodb.com/docs/manual/release-notes/"
-    }
+    },
   ]
 }
