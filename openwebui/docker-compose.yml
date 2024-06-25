@@ -1,0 +1,32 @@
+networks:
+  reverse_proxy:
+    external: true
+    driver: overlay
+
+services:
+  ollama:
+    image: ollama/ollama:0.1.46
+    restart: unless-stopped
+    container_name: ollama
+    # tty: true
+    volumes:
+      - ./ollama:/root/.ollama
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:v0.3.5
+    restart: unless-stopped
+    container_name: open-webui
+    depends_on: [ollama]
+    volumes:
+      - ./open-webui:/app/backend/data
+    # ports: [18080:8080]
+    networks: [default, reverse_proxy]
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    env_file: [.env]
+    # extra_hosts:
+    #   - host.docker.internal:host-gateway
+    labels:
+      - swag=enable
+      - swag_address=open-webui
+      - swag_url=ai.*
