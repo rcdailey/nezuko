@@ -13,7 +13,7 @@ services:
       - ./ollama:/root/.ollama
 
   open-webui:
-    image: ghcr.io/open-webui/open-webui:v0.3.5
+    image: ghcr.io/open-webui/open-webui:v0.3.6
     restart: unless-stopped
     container_name: open-webui
     depends_on: [ollama]
