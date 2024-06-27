@@ -8,7 +8,7 @@ networks:
 
 services:
   postgresql:
-    image: docker.io/library/postgres:12-alpine
+    image: docker.io/library/postgres:16-alpine
     restart: unless-stopped
     networks: [private]
     healthcheck:
