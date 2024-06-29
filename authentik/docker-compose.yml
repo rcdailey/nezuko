@@ -1,16 +1,14 @@
 name: authentik
 
 networks:
-  private:
   reverse_proxy:
     external: true
     driver: overlay
 
 services:
-  postgresql:
-    image: docker.io/library/postgres:12-alpine
+  db:
+    image: docker.io/library/postgres:16-alpine
     restart: unless-stopped
-    networks: [private]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
       start_period: 20s
@@ -18,10 +16,9 @@ services:
       retries: 5
       timeout: 5s
     volumes:
-      - ./database:/var/lib/postgresql/data
-    env_file: [.env]
+      - ./database_v16:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=${PG_PASS}
+      - POSTGRES_PASSWORD=authentik
       - POSTGRES_USER=authentik
       - POSTGRES_DB=authentik
 
@@ -29,7 +26,6 @@ services:
     image: docker.io/library/redis:alpine
     command: --save 60 1 --loglevel warning
     restart: unless-stopped
-    networks: [private]
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
       start_period: 20s
@@ -40,14 +36,14 @@ services:
       - ./redis:/data
 
   server:
-    image: ghcr.io/goauthentik/server:2024.4.2
+    image: ghcr.io/goauthentik/server:2024.6.0
     restart: unless-stopped
     command: server
     container_name: authentik
-    # ports:
-    #   - 30002:9000
+    depends_on: [db, redis]
+    # ports: [30002:9000]
     networks:
-      private:
+      default:
       reverse_proxy:
         # This is required for SWAG's auto proxy, because the `authentik.subdomain.conf` uses
         # hostname `authentik-server` instead of the container name. Auto-detection matches the file
@@ -56,10 +52,10 @@ services:
     env_file: [.env]
     environment: &authentik_envs
       AUTHENTIK_REDIS__HOST: redis
-      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__HOST: db
       AUTHENTIK_POSTGRESQL__USER: authentik
       AUTHENTIK_POSTGRESQL__NAME: authentik
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      AUTHENTIK_POSTGRESQL__PASSWORD: authentik
       # AUTHENTIK_ERROR_REPORTING__ENABLED: "true"
     volumes:
       - ./media:/media
@@ -70,10 +66,9 @@ services:
       - swag_url=auth.*
 
   worker:
-    image: ghcr.io/goauthentik/server:2024.4.2
+    image: ghcr.io/goauthentik/server:2024.6.0
     restart: unless-stopped
     command: worker
-    networks: [private]
     env_file: [.env]
     environment: *authentik_envs
     # This is optional, and can be removed. If you remove this, the following will happen
