@@ -65,7 +65,6 @@ services:
       - TZ=America/Chicago
       - PUID=$DOCKER_UID
       - PGID=$DOCKER_GID
-      - DOCKER_MODS=ghcr.io/gilbn/theme.park:bazarr
       - TP_THEME=plex
     labels:
       - swag=enable
