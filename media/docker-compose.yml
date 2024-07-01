@@ -2,7 +2,7 @@ networks:
   reverse_proxy:
     external: true
     driver: overlay
-  pmm_network:
+  kometa:
   recyclarr:
 
 volumes:
@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
     container_name: plex
     logging: *logging
-    networks: [pmm_network, reverse_proxy]
+    networks: [kometa, reverse_proxy]
     ports:
       - 32400:32400
       # - 1900:1900/udp
@@ -198,7 +198,7 @@ services:
     restart: unless-stopped
     container_name: radarr4k
     logging: *logging
-    networks: [recyclarr, pmm_network, reverse_proxy]
+    networks: [recyclarr, kometa, reverse_proxy]
     # ports:
     #   - 7879:7878
     volumes:
@@ -222,7 +222,7 @@ services:
     restart: unless-stopped
     container_name: radarr_anime
     logging: *logging
-    networks: [recyclarr, pmm_network, reverse_proxy]
+    networks: [recyclarr, kometa, reverse_proxy]
     # ports:
     #   - 7878:7878
     volumes:
@@ -241,14 +241,14 @@ services:
       - swag_url=radarr-anime.*
 
   #########################################################################
-  pmm:
-    image: meisnate12/plex-meta-manager:v1.21.0
+  kometa:
+    image: kometateam/kometa:v2.0.2
     restart: unless-stopped
-    container_name: pmm
+    container_name: kometa
     logging: *logging
-    networks: [pmm_network]
+    networks: [kometa]
     volumes:
-      - ./plexmetamanager:/config
+      - ./kometa:/config
     environment:
       - TZ=America/Chicago
       - PUID=$DOCKER_UID
