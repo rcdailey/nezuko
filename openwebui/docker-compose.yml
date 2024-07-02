@@ -11,7 +11,7 @@ services:
       - ./ollama:/root/.ollama
 
   speech:
-    image: ghcr.io/matatonic/openedai-speech:0.16.0
+    image: ghcr.io/matatonic/openedai-speech:0.17.2
     restart: unless-stopped
     init: true
     # ports: [8000:8000]
