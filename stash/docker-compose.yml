@@ -7,7 +7,7 @@ networks:
 
 services:
   app:
-    image: stashapp/stash:v0.26.1
+    image: stashapp/stash:v0.26.2
     container_name: stash
     restart: unless-stopped
     ## Non-root not supported. See:
