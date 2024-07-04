@@ -5,7 +5,7 @@ networks:
 
 services:
   ollama:
-    image: ollama/ollama:0.1.46
+    image: ollama/ollama:0.1.48
     restart: unless-stopped
     volumes:
       - ./ollama:/root/.ollama
