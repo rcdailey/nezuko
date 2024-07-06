@@ -3,7 +3,7 @@ volumes:
 
 services:
   borgmatic:
-    image: ghcr.io/borgmatic-collective/borgmatic:1.8.12
+    image: ghcr.io/borgmatic-collective/borgmatic:1.8.13
     container_name: borgmatic
     restart: unless-stopped
     network_mode: bridge
