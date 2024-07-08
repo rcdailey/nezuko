@@ -110,7 +110,7 @@ services:
 
   #########################################################################
   prowlarr:
-    image: ghcr.io/hotio/prowlarr:release-1.16.2.4435
+    image: ghcr.io/hotio/prowlarr:release-1.20.1.4603
     restart: unless-stopped
     container_name: prowlarr
     logging: *logging
