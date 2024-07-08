@@ -174,7 +174,7 @@ services:
 
   #########################################################################
   radarr:
-    image: ghcr.io/hotio/radarr:release-5.4.6.8723
+    image: ghcr.io/hotio/radarr:release-5.7.0.8882
     restart: unless-stopped
     container_name: radarr
     logging: *logging
@@ -194,7 +194,7 @@ services:
 
   #########################################################################
   radarr4k:
-    image: ghcr.io/hotio/radarr:release-5.4.6.8723
+    image: ghcr.io/hotio/radarr:release-5.7.0.8882
     restart: unless-stopped
     container_name: radarr4k
     logging: *logging
@@ -218,7 +218,7 @@ services:
 
   #########################################################################
   radarr_anime:
-    image: ghcr.io/hotio/radarr:release-5.4.6.8723
+    image: ghcr.io/hotio/radarr:release-5.7.0.8882
     restart: unless-stopped
     container_name: radarr_anime
     logging: *logging
