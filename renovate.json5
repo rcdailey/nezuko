@@ -15,6 +15,13 @@
       "matchUpdateTypes": ["patch"]
     },
     {
+      // hotio tags use a format like "release-4.0.4.1491"
+      // See: https://github.com/renovatebot/renovate/issues/7297
+      "matchPackagePrefixes": ["ghcr.io/hotio/"],
+      "versionCompatibility": "^(?<compatibility>[^-]+)-(?<version>.*)$",
+      "versioning": "docker"
+    },
+    {
       "matchPackageNames": ["docker.io/library/postgres"],
       "customChangelogUrl": "https://github.com/postgres/postgres"
     },
