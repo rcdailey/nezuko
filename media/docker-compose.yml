@@ -322,7 +322,7 @@ services:
 
   #########################################################################
   unpackerr:
-    image: ghcr.io/hotio/unpackerr:release-0.13.1
+    image: ghcr.io/hotio/unpackerr:release-0.14.0
     restart: unless-stopped
     container_name: unpackerr
     logging: *logging
