@@ -51,7 +51,7 @@ services:
 
   #########################################################################
   sabnzbd:
-    image: ghcr.io/hotio/sabnzbd:release-4.3.1
+    image: ghcr.io/hotio/sabnzbd:release-4.3.2
     restart: unless-stopped
     container_name: sabnzbd
     logging: *logging
@@ -72,7 +72,7 @@ services:
 
   #########################################################################
   qbittorrent:
-    image: ghcr.io/hotio/qbittorrent:release-4.6.4
+    image: ghcr.io/hotio/qbittorrent:release-4.6.5
     # restart: unless-stopped
     container_name: qbittorrent
     logging: *logging
@@ -130,7 +130,7 @@ services:
 
   #########################################################################
   sonarr:
-    image: ghcr.io/hotio/sonarr:release-4.0.4.1491
+    image: ghcr.io/hotio/sonarr:release-4.0.6.1805
     restart: unless-stopped
     container_name: sonarr
     logging: *logging
@@ -150,7 +150,7 @@ services:
 
   #########################################################################
   sonarr_anime:
-    image: ghcr.io/hotio/sonarr:release-4.0.4.1491
+    image: ghcr.io/hotio/sonarr:release-4.0.6.1805
     restart: unless-stopped
     container_name: sonarr_anime
     logging: *logging
