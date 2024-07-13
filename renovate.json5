@@ -49,5 +49,13 @@
       "matchPackageNames": ["mongo"],
       "customChangelogUrl": "https://www.mongodb.com/docs/manual/release-notes/"
     },
+    {
+      "matchPackageNames": ["ghcr.io/onedr0p/radarr"],
+      "customChangelogUrl": "https://github.com/Radarr/Radarr"
+    },
+    {
+      "matchPackageNames": ["ghcr.io/onedr0p/prowlarr"],
+      "customChangelogUrl": "https://github.com/Prowlarr/Prowlarr"
+    },
   ]
 }
