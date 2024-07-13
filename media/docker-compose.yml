@@ -171,7 +171,7 @@ services:
 
   #########################################################################
   radarr:
-    image: ghcr.io/onedr0p/radarr:5.4.6
+    image: ghcr.io/onedr0p/radarr:5.7.0
     user: $DOCKER_UID:$DOCKER_GID
     restart: unless-stopped
     container_name: radarr
@@ -190,7 +190,7 @@ services:
 
   #########################################################################
   radarr4k:
-    image: ghcr.io/onedr0p/radarr:5.4.6
+    image: ghcr.io/onedr0p/radarr:5.7.0
     user: $DOCKER_UID:$DOCKER_GID
     restart: unless-stopped
     container_name: radarr4k
@@ -213,7 +213,7 @@ services:
 
   #########################################################################
   radarr_anime:
-    image: ghcr.io/onedr0p/radarr:5.4.6
+    image: ghcr.io/onedr0p/radarr:5.7.0
     user: $DOCKER_UID:$DOCKER_GID
     restart: unless-stopped
     container_name: radarr_anime
