@@ -28,7 +28,7 @@ services:
       - ./tts-config:/app/config
 
   open-webui:
-    image: ghcr.io/open-webui/open-webui:v0.3.8
+    image: ghcr.io/open-webui/open-webui:v0.3.10
     restart: unless-stopped
     depends_on: [ollama, speech]
     networks: [default, reverse_proxy]
