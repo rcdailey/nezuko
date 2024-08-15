@@ -5,7 +5,7 @@ networks:
 
 services:
   ollama:
-    image: ollama/ollama:0.3.3
+    image: ollama/ollama:latest
     restart: unless-stopped
     volumes:
       - ./ollama:/root/.ollama
@@ -26,6 +26,13 @@ services:
     volumes:
       - ./tts-voices:/app/voices
       - ./tts-config:/app/config
+
+  searxng:
+    image: searxng/searxng:latest
+    restart: unless-stopped
+    init: true
+    volumes:
+      - ./searxng:/etc/searxng
 
   open-webui:
     image: ghcr.io/open-webui/open-webui:v0.3.13
