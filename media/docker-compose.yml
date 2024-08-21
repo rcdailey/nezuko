@@ -51,7 +51,7 @@ services:
 
   #########################################################################
   sabnzbd:
-    image: ghcr.io/hotio/sabnzbd:release-4.3.2
+    image: ghcr.io/hotio/sabnzbd:release-4.3.3
     restart: unless-stopped
     container_name: sabnzbd
     logging: *logging
