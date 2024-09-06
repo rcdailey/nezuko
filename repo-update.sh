@@ -3,7 +3,7 @@ set -e
 
 cd /mnt/fast/docker
 
-CHANGES=$(git status --porcelain)
+CHANGES=$(git status -uno --porcelain)
 if [[ -n "$CHANGES" ]]; then
     echo "Working copy has modifications; will not proceed further"
     exit 1
