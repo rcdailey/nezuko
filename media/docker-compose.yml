@@ -332,7 +332,7 @@ services:
 
   #########################################################################
   recyclarr:
-    image: ghcr.io/recyclarr/recyclarr:7.2.3
+    image: ghcr.io/recyclarr/recyclarr:7.2.4
     restart: unless-stopped
     user: $DOCKER_UID:$DOCKER_GID
     container_name: recyclarr
