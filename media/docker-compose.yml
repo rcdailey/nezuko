@@ -72,7 +72,7 @@ services:
 
   #########################################################################
   qbittorrent:
-    image: ghcr.io/hotio/qbittorrent:release-4.6.6
+    image: ghcr.io/hotio/qbittorrent:release-4.6.7
     # restart: unless-stopped
     container_name: qbittorrent
     logging: *logging
@@ -252,7 +252,7 @@ services:
 
   #########################################################################
   bazarr:
-    image: ghcr.io/linuxserver/bazarr:1.4.3
+    image: ghcr.io/linuxserver/bazarr:1.4.4
     restart: unless-stopped
     container_name: bazarr
     logging: *logging
