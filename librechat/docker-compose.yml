@@ -38,7 +38,7 @@ services:
       - swag_url=ai.*
 
   mongodb:
-    image: mongo:7.0.12
+    image: mongo:7.0.14
     restart: unless-stopped
     user: $DOCKER_UID:$DOCKER_GID
     volumes:
