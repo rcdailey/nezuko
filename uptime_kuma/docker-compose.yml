@@ -5,7 +5,7 @@ networks:
 
 services:
   app:
-    image: louislam/uptime-kuma:1.23.13
+    image: louislam/uptime-kuma:1.23.15
     restart: unless-stopped
     container_name: uptime
     networks: [reverse_proxy]
