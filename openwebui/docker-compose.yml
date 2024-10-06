@@ -52,6 +52,13 @@ services:
     volumes:
       - ./searxng:/etc/searxng
 
+  pipelines:
+    image: ghcr.io/open-webui/pipelines
+    restart: always
+    ports: [9099:9099]
+    volumes:
+      - ./pipelines:/app/pipelines
+
   open-webui:
     image: ghcr.io/open-webui/open-webui:0.3.30
     restart: unless-stopped
