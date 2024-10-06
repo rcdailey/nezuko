@@ -1,0 +1,32 @@
+networks:
+  reverse_proxy:
+    external: true
+    driver: overlay
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: 1m
+    max-file: 1
+
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:main-v1.48.17
+    restart: unless-stopped
+    logging: *default-logging
+    volumes:
+      - ./config.yaml:/app/config.yaml
+    env_file: [.env]
+    ports: [14000:4000]
+    command: --config /app/config.yaml --detailed_debug
+    networks: [reverse_proxy, default]
+
+#   db:
+#     image: postgres:17-alpine
+#     restart: unless-stopped
+#     environment:
+#       - POSTGRES_USER=litellm
+#       - POSTGRES_PASSWORD=litellm
+#       - POSTGRES_DB=litellm
+#     volumes:
+#       - ./postgres17:/var/lib/postgresql/data
