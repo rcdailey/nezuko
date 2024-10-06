@@ -1,0 +1,72 @@
+networks:
+  reverse_proxy:
+    external: true
+    driver: overlay
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: 1m
+    max-file: 1
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    logging: *default-logging
+    volumes:
+      - ./ollama:/root/.ollama
+
+  speech:
+    image: ghcr.io/matatonic/openedai-speech:0.18.2
+    restart: unless-stopped
+    logging: *default-logging
+    init: true
+    # ports: [8000:8000]
+    # env_file: .env
+    environment:
+      - TZ=America/Chicago
+      - TTS_HOME=voices
+      - HF_HOME=voices
+      # - PRELOAD_MODEL=xtts
+      # - PRELOAD_MODEL=xtts_v2.0.2
+      # - PRELOAD_MODEL=parler-tts/parler_tts_mini_v0.1
+    volumes:
+      - ./tts-voices:/app/voices
+      - ./tts-config:/app/config
+
+  redis:
+    image: docker.io/library/redis:alpine
+    command: --save 60 1 --loglevel warning
+    restart: unless-stopped
+    logging: *default-logging
+    volumes:
+      - ./redis:/data
+
+  searxng:
+    image: searxng/searxng:latest
+    restart: unless-stopped
+    # depends_on: [redis]
+    logging: *default-logging
+    # init: true
+    volumes:
+      - ./searxng:/etc/searxng
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:0.3.30
+    restart: unless-stopped
+    logging: *default-logging
+    # depends_on: [ollama, speech, searxng]
+    networks: [default, reverse_proxy]
+    env_file: .env
+    init: true
+    volumes:
+      - ./open-webui:/app/backend/data
+    # ports: [18080:8080]
+    environment:
+      - TZ=America/Chicago
+      - OLLAMA_BASE_URL=http://ollama:11434
+    labels:
+      - swag=enable
+      - swag_address=open-webui
+      - swag_url=ai.*
