@@ -18,3 +18,7 @@ model_list:
     litellm_params:
       model: perplexity/llama-3.1-sonar-small-128k-online
       api_key: os.environ/PERPLEXITY_API_KEY
+
+litellm_settings:
+  set_verbose: True
+  cache: True          # set cache responses to True, litellm defaults to using a redis cache
