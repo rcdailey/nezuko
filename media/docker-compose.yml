@@ -129,7 +129,7 @@ services:
 
   #########################################################################
   sonarr:
-    image: ghcr.io/onedr0p/sonarr:4.0.9
+    image: ghcr.io/onedr0p/sonarr:4.0.10
     user: $DOCKER_UID:$DOCKER_GID
     restart: unless-stopped
     container_name: sonarr
@@ -148,7 +148,7 @@ services:
 
   #########################################################################
   sonarr_anime:
-    image: ghcr.io/onedr0p/sonarr:4.0.9
+    image: ghcr.io/onedr0p/sonarr:4.0.10
     user: $DOCKER_UID:$DOCKER_GID
     restart: unless-stopped
     container_name: sonarr_anime
