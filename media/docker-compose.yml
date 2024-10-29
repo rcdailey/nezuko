@@ -72,7 +72,7 @@ services:
 
   #########################################################################
   qbittorrent:
-    image: ghcr.io/hotio/qbittorrent:release-4.6.7
+    image: ghcr.io/hotio/qbittorrent:release-5.0.1
     # restart: unless-stopped
     container_name: qbittorrent
     logging: *logging
