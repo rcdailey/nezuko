@@ -20,7 +20,7 @@ x-logging: &logging
 services:
   #########################################################################
   plex:
-    image: ghcr.io/hotio/plex:release-1.40.2.8395-c67dce28e
+    image: ghcr.io/hotio/plex:release-1.41.2.9200-c67dce28e
     restart: unless-stopped
     container_name: plex
     logging: *logging
