@@ -6,19 +6,21 @@ networks:
 x-logging: &default-logging
   driver: json-file
   options:
-    max-size: 1m
+    max-size: 50m
     max-file: 1
 
 services:
   litellm:
     image: ghcr.io/berriai/litellm:main-v1.52.8
     restart: unless-stopped
+    init: true
     logging: *default-logging
     volumes:
       - ./config.yaml:/app/config.yaml
     env_file: [.env]
     environment:
       - REDIS_HOST=redis
+      # - LITELLM_LOG=DEBUG
     ports: [14000:4000]
     command: --config /app/config.yaml --detailed_debug
     networks: [reverse_proxy, default]
