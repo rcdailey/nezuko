@@ -65,5 +65,9 @@
       "matchPackageNames": ["ghcr.io/onedr0p/prowlarr"],
       "customChangelogUrl": "https://github.com/Prowlarr/Prowlarr"
     },
+    {
+      "matchPackageNames": ["ghcr.io/hotio/plex"],
+      "customChangelogUrl": "https://forums.plex.tv/t/plex-media-server/30447/651"
+    },
   ]
 }
