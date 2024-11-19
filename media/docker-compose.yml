@@ -296,7 +296,7 @@ services:
 
   #########################################################################
   overseerr:
-    image: ghcr.io/hotio/overseerr:release-1.33.2
+    image: ghcr.io/hotio/overseerr:release-9832473
     restart: unless-stopped
     container_name: overseerr
     logging: *logging
