@@ -18,12 +18,13 @@
       // - release-1.40.2.8395-c67dce28e
       // - main-v1.52.8
       // - release-4.3.3
+      "matchDatasources": ["docker"],
       "matchPackagePrefixes": [
         "ghcr.io/hotio/",
         "ghcr.io/berriai/"
       ],
-      "versionCompatibility": "^(?<compatibility>[^-]+)-v?(?<version>[\\d.]+)",
-      "versioning": "docker"
+      "versioning": "loose",
+      // "versionCompatibility": "^(?<compatibility>[^-]+)-v?(?<version>[\\d.]+)"
     },
     {
       "matchPackageNames": ["docker.io/library/postgres"],
