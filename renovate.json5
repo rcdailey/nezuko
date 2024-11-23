@@ -23,8 +23,8 @@
         "ghcr.io/hotio/",
         "ghcr.io/berriai/"
       ],
-      "versioning": "loose",
-      // "versionCompatibility": "^(?<compatibility>[^-]+)-v?(?<version>[\\d.]+)"
+      "versionCompatibility": "^(?<compatibility>[^-]+)-v?(?<version>[\\d.]+)",
+      // "versioning": "loose",
     },
     {
       "matchPackageNames": ["docker.io/library/postgres"],
