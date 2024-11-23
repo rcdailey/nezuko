@@ -15,7 +15,6 @@
       // See: https://github.com/renovatebot/renovate/issues/7297
       //
       // Examples:
-      // - release-1.40.2.8395-c67dce28e
       // - main-v1.52.8
       // - release-4.3.3
       "matchDatasources": ["docker"],
@@ -24,7 +23,13 @@
         "ghcr.io/berriai/"
       ],
       "versionCompatibility": "^(?<compatibility>[^-]+)-v?(?<version>[\\d.]+)",
-      // "versioning": "loose",
+    },
+    {
+      // This is to support this tag's particular form. The SHA1 at the end causes issues:
+      //
+      // Example: release-1.40.2.8395-c67dce28e
+      "matchPackagePrefixes": ["ghcr.io/hotio/plex"],
+      "versioning": "loose"
     },
     {
       "matchPackageNames": ["docker.io/library/postgres"],
