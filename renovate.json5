@@ -10,27 +10,28 @@
       "matchCurrentVersion": "!/^v?0/", // exclude 0.x versions
       "matchUpdateTypes": ["patch"]
     },
-    {
-      // hotio tags use a format like "release-4.0.4.1491"
-      // See: https://github.com/renovatebot/renovate/issues/7297
-      //
-      // Examples:
-      // - main-v1.52.8
-      // - release-4.3.3
-      "matchDatasources": ["docker"],
-      "matchPackagePrefixes": [
-        "ghcr.io/hotio/",
-        "ghcr.io/berriai/"
-      ],
-      "versionCompatibility": "^(?<compatibility>[^-]+)-v?(?<version>[\\d.]+)",
-    },
+    // {
+    //   // hotio tags use a format like "release-4.0.4.1491"
+    //   // See: https://github.com/renovatebot/renovate/issues/7297
+    //   //
+    //   // Examples:
+    //   // - main-v1.52.8
+    //   // - release-4.3.3
+    //   "matchDatasources": ["docker"],
+    //   "matchPackageNames": [
+    //     "/^ghcr.io/hotio//",
+    //     "/^ghcr.io/berriai//",
+    //     "!/^ghcr.io/hotio/plex/", // This is handled in a different block
+    //   ],
+    //   "versionCompatibility": "^(?<compatibility>[^-]+)-v?(?<version>[\\d.]+)",
+    // },
     {
       // This is to support this tag's particular form. The SHA1 at the end causes issues:
       //
       // Example: release-1.40.2.8395-c67dce28e
       "matchPackageNames": ["ghcr.io/hotio/plex"],
       "versionCompatibility": "^(?<compatibility>[^-]+)-v?(?<version>[\\d.]+)",
-      "versioning": "loose"
+      "versioning": "loose",
     },
     {
       "matchPackageNames": ["docker.io/library/postgres"],
