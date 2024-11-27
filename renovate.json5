@@ -17,20 +17,14 @@
       // Examples:
       // - main-v1.52.8
       // - release-4.3.3
+      // - release-1.40.2.8395-c67dce28e
       "matchDatasources": ["docker"],
-      "matchPackagePrefixes": [
-        "ghcr.io/hotio/",
-        "ghcr.io/berriai/"
+      "matchPackageNames": [
+        "/^ghcr.io/hotio//",
+        "/^ghcr.io/berriai//",
       ],
-      "versionCompatibility": "^(?<compatibility>[^-]+)-v?(?<version>[\\d.]+)",
-    },
-    {
-      // This is to support this tag's particular form. The SHA1 at the end causes issues:
-      //
-      // Example: release-1.40.2.8395-c67dce28e
-      "matchPackageNames": ["ghcr.io/hotio/plex"],
-      "versionCompatibility": "^(?<compatibility>[^-]+)-v?(?<version>[\\d.]+)",
-      "versioning": "loose"
+      "versionCompatibility": "(?<compatibility>[^-]+)-v?(?<version>\\d+\\.\\d+\\.\\d+(?:\\.[\\w\\d.-]+)?)",
+      "versioning": "loose",
     },
     {
       "matchPackageNames": ["docker.io/library/postgres"],
