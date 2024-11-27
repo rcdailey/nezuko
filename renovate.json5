@@ -26,6 +26,15 @@
       "versionCompatibility": "(?<compatibility>[^-]+)-v?(?<version>\\d+\\.\\d+\\.\\d+(?:\\.[\\w\\d.-]+)?)",
       "versioning": "loose",
     },
+    // {
+    //   // This is to support this tag's particular form. The SHA1 at the end causes issues:
+    //   //
+    //   // Example: release-1.40.2.8395-c67dce28e
+    //   "matchPackageNames": [
+    //     "ghcr.io/hotio/plex"
+    //   ],
+    //   "versioning": "loose",
+    // },
     {
       "matchPackageNames": ["docker.io/library/postgres"],
       "customChangelogUrl": "https://github.com/postgres/postgres"
