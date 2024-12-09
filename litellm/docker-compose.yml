@@ -11,7 +11,7 @@ x-logging: &default-logging
 
 services:
   litellm:
-    image: ghcr.io/berriai/litellm:main-v1.52.16
+    image: ghcr.io/berriai/litellm:main-v1.54.1
     restart: unless-stopped
     init: true
     logging: *default-logging
