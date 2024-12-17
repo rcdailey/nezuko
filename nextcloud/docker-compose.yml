@@ -11,7 +11,7 @@ networks:
 
 services:
   app:
-    image: lscr.io/linuxserver/nextcloud:30.0.3
+    image: lscr.io/linuxserver/nextcloud:30.0.4
     restart: unless-stopped
     container_name: nextcloud
     depends_on: [db, redis]
