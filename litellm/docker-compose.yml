@@ -18,26 +18,26 @@ services:
     volumes:
       - ./config.yaml:/app/config.yaml
     env_file: [.env]
-    environment:
-      - REDIS_HOST=redis
+    # environment:
+      # - REDIS_HOST=redis
       # - LITELLM_LOG=DEBUG
     ports: [14000:4000]
     command: --config /app/config.yaml --detailed_debug
     networks: [reverse_proxy, default]
 
-  redis:
-    image: redis:alpine
-    command: --save 60 1 --loglevel warning
-    restart: unless-stopped
-    logging: *default-logging
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
-      start_period: 20s
-      interval: 30s
-      retries: 5
-      timeout: 3s
-    volumes:
-      - ./redis:/data
+  # redis:
+  #   image: redis:alpine
+  #   command: --save 60 1 --loglevel warning
+  #   restart: unless-stopped
+  #   logging: *default-logging
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+  #     start_period: 20s
+  #     interval: 30s
+  #     retries: 5
+  #     timeout: 3s
+  #   volumes:
+  #     - ./redis:/data
 
 #   db:
 #     image: postgres:17-alpine

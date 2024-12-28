@@ -20,4 +20,5 @@ model_list:
       api_key: os.environ/PERPLEXITY_API_KEY
 
 litellm_settings:
-  cache: True          # set cache responses to True, litellm defaults to using a redis cache
+    drop_params: true
+#   cache: True          # set cache responses to True, litellm defaults to using a redis cache
