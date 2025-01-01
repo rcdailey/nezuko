@@ -9,8 +9,7 @@ services:
     restart: unless-stopped
     container_name: uptime
     networks: [reverse_proxy]
-    # ports:
-    #   - 3001:3001
+    # ports: [3001:3001]
     volumes:
       - ./data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
