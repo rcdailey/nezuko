@@ -21,7 +21,7 @@ services:
       - POST=0
 
   swag:
-    image: ghcr.io/linuxserver/swag:3.0.1
+    image: ghcr.io/linuxserver/swag:3.1.0
     restart: unless-stopped
     container_name: swag
     networks: [reverse_proxy, dockerproxy]
