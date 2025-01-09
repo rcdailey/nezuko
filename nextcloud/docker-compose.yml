@@ -33,7 +33,7 @@ services:
       - swag_proto=http
 
   db:
-    image: lscr.io/linuxserver/mariadb:10.11.10
+    image: lscr.io/linuxserver/mariadb:11.4.4
     restart: unless-stopped
     networks: [private]
     env_file: [db.env]
