@@ -46,7 +46,7 @@ services:
     command: mongod --noauth
 
   meilisearch:
-    image: getmeili/meilisearch:v1.12.3
+    image: getmeili/meilisearch:v1.12.4
     restart: unless-stopped
     user: $DOCKER_UID:$DOCKER_GID
     environment:
