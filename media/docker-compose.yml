@@ -111,7 +111,7 @@ services:
 
   #########################################################################
   prowlarr:
-    image: ghcr.io/onedr0p/prowlarr:1.29.2
+    image: ghcr.io/onedr0p/prowlarr:1.30.2
     user: $DOCKER_UID:$DOCKER_GID
     restart: unless-stopped
     container_name: prowlarr
