@@ -5,7 +5,7 @@ networks:
 
 services:
   api:
-    image: ghcr.io/danny-avila/librechat:v0.7.6
+    image: ghcr.io/danny-avila/librechat-dev:latest@sha256:3b0f76588ec28d5b0a29f1d1eb857b5d3a209c0b2b743841c71a06c54f4e65a3
     restart: unless-stopped
     user: $DOCKER_UID:$DOCKER_GID
     depends_on: [mongodb, rag_api]
