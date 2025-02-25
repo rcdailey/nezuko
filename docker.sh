@@ -98,6 +98,6 @@ done
 if [[ "$operation_name" == "start" ]]; then
     echo
     echo "Performing system prune..."
-    docker system prune -f
+    docker system prune -af
     echo "Done"
 fi

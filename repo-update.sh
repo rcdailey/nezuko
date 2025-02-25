@@ -34,3 +34,5 @@ for file in $COMPOSE_FILES; do
     echo "============================================================="
     docker compose -f "$file" up -d --pull always --remove-orphans
 done
+
+docker system prune -af
