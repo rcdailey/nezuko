@@ -11,7 +11,7 @@ x-logging: &default-logging
 
 services:
   api:
-    image: ghcr.io/danny-avila/librechat-dev:latest@sha256:bc5ce0b0d559d2c91d6a667184a52caac1c722a788f2a2cc68ffe5be26826b63
+    image: ghcr.io/danny-avila/librechat-dev:latest@sha256:4e7e81868d63ee9c64c8097766083ef90e0319ee90118c6e951ba35834bf6e7d
     restart: unless-stopped
     user: $DOCKER_UID:$DOCKER_GID
     depends_on: [mongodb, rag_api]
