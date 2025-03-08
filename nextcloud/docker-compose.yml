@@ -4,7 +4,6 @@ volumes:
   redis-data:
 
 networks:
-  private:
   reverse_proxy:
     external: true
     driver: overlay
@@ -15,7 +14,7 @@ services:
     restart: unless-stopped
     container_name: nextcloud
     depends_on: [db, redis]
-    networks: [private, reverse_proxy]
+    networks: [default, reverse_proxy]
     # ports:
     #   - 30001:80
     env_file: [db.env]
@@ -33,21 +32,21 @@ services:
       - swag_proto=http
 
   db:
-    image: lscr.io/linuxserver/mariadb:10.11.10
+    image: mariadb:11.7
     restart: unless-stopped
-    networks: [private]
     env_file: [db.env]
+    user: $DOCKER_UID:$DOCKER_GID
     environment:
       - TZ=America/Chicago
-      - PUID=$DOCKER_UID
-      - PGID=$DOCKER_GID
+      - MARIADB_AUTO_UPGRADE=1
+      - MARIADB_INITDB_SKIP_TZINFO=1
     volumes:
-      - ./mariadb:/config
+      - ./mariadb:/var/lib/mysql
+      - ./mariadb.cnf:/etc/mysql/conf.d/mariadb.cnf:ro
 
   redis:
     image: redis:7.4.2
     restart: unless-stopped
-    networks: [private]
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - redis-data:/data
