@@ -11,7 +11,7 @@ x-logging: &default-logging
 
 services:
   api:
-    image: ghcr.io/danny-avila/librechat-dev:latest@sha256:4e7e81868d63ee9c64c8097766083ef90e0319ee90118c6e951ba35834bf6e7d
+    image: ghcr.io/danny-avila/librechat:v0.7.7
     restart: unless-stopped
     user: $DOCKER_UID:$DOCKER_GID
     depends_on: [mongodb, rag_api]
@@ -76,7 +76,7 @@ services:
       - ./vectordb_pg16:/var/lib/postgresql/data
 
   rag_api:
-    image: ghcr.io/danny-avila/librechat-rag-api-dev-lite #:v0.2.0
+    image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:v0.4.0
     restart: unless-stopped
     depends_on: [vectordb]
     logging: *default-logging
