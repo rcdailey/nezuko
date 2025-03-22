@@ -3,10 +3,3 @@
 printWidth: 100
 tabWidth: 2
 useTabs: false
-
-# Ensure JSON5 files get correctly parsed
-overrides:
-  - files: "*.json5"
-    options:
-      parser: "json5"
-      quoteProps: "preserve"
