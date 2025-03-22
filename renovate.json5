@@ -1,77 +1,74 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", ":disableRateLimiting"],
-  "minimumReleaseAge": "5 days",
-  "packageRules": [
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:recommended", ":disableRateLimiting"],
+  minimumReleaseAge: "5 days",
+  packageRules: [
     {
-      "groupName": "all patch dependencies",
-      "groupSlug": "all-patch",
-      "matchPackagePatterns": ["*"],
-      "matchCurrentVersion": "!/^v?0/", // exclude 0.x versions
-      "matchUpdateTypes": ["patch"],
+      groupName: "all patch dependencies",
+      groupSlug: "all-patch",
+      matchCurrentVersion: "!/^v?0/",
+      matchUpdateTypes: ["patch"],
+      matchPackageNames: ["*"],
     },
     {
-      // general matching for most hotio docker tags, like "release-4.4.1"
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["/^ghcr.io/hotio//"],
-      "versionCompatibility": "^(?<compatibility>[^-]+)-v?(?<version>\\d+\\.\\d+\\.\\d+)$",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/^ghcr.io/hotio//"],
+      versionCompatibility: "^(?<compatibility>[^-]+)-v?(?<version>\\d+\\.\\d+\\.\\d+)$",
     },
     {
-      // hotio's plex tags are more complicated, like "release-1.40.2.8395-c67dce28e"
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["ghcr.io/hotio/plex"],
-      "versionCompatibility": "^(?<compatibility>[^-]+)-v?(?<version>\\d+\\.\\d+\\.\\d+(?:\\.\\d+(?:-[\\w\\d]+)?)?)$",
-      "versioning": "loose",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/hotio/plex"],
+      versionCompatibility: "^(?<compatibility>[^-]+)-v?(?<version>\\d+\\.\\d+\\.\\d+(?:\\.\\d+(?:-[\\w\\d]+)?)?)$",
+      versioning: "loose",
     },
     {
-      // litellm uses nonstandard tags, like "main-v1.63.11-stable"
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["ghcr.io/berriai/litellm"],
-      "versionCompatibility": "^main-v(?<version>\\d+\\.\\d+\\.\\d+)-(?<compatibility>.+)$",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/berriai/litellm"],
+      versionCompatibility: "^main-v(?<version>\\d+\\.\\d+\\.\\d+)-(?<compatibility>.+)$",
     },
     {
-      "matchPackageNames": ["docker.io/library/postgres"],
-      "customChangelogUrl": "https://github.com/postgres/postgres",
+      matchPackageNames: ["docker.io/library/postgres"],
+      changelogUrl: "https://github.com/postgres/postgres",
     },
     {
-      "matchPackageNames": ["getmeili/meilisearch"],
-      "customChangelogUrl": "https://github.com/meilisearch/meilisearch",
+      matchPackageNames: ["getmeili/meilisearch"],
+      changelogUrl: "https://github.com/meilisearch/meilisearch",
     },
     {
-      "matchPackageNames": ["ghcr.io/danny-avila/librechat-rag-api-dev-lite"],
-      "customChangelogUrl": "https://github.com/danny-avila/rag_api",
+      matchPackageNames: ["ghcr.io/danny-avila/librechat-rag-api-dev-lite"],
+      changelogUrl: "https://github.com/danny-avila/rag_api",
     },
     {
-      "matchPackageNames": ["ghcr.io/danny-avila/librechat"],
-      "customChangelogUrl": "https://github.com/danny-avila/LibreChat",
+      matchPackageNames: ["ghcr.io/danny-avila/librechat"],
+      changelogUrl: "https://github.com/danny-avila/LibreChat",
     },
     {
-      "matchPackageNames": ["b4bz/homer"],
-      "customChangelogUrl": "https://github.com/bastienwirtz/homer",
+      matchPackageNames: ["b4bz/homer"],
+      changelogUrl: "https://github.com/bastienwirtz/homer",
     },
     {
-      "matchPackageNames": ["lscr.io/linuxserver/nextcloud"],
-      "customChangelogUrl": "https://github.com/nextcloud/server",
+      matchPackageNames: ["lscr.io/linuxserver/nextcloud"],
+      changelogUrl: "https://github.com/nextcloud/server",
     },
     {
-      "matchPackageNames": ["redis"],
-      "customChangelogUrl": "https://github.com/redis/redis",
+      matchPackageNames: ["redis"],
+      changelogUrl: "https://github.com/redis/redis",
     },
     {
-      "matchPackageNames": ["mongo"],
-      "customChangelogUrl": "https://www.mongodb.com/docs/manual/release-notes/",
+      matchPackageNames: ["mongo"],
+      changelogUrl: "https://www.mongodb.com/docs/manual/release-notes/",
     },
     {
-      "matchPackageNames": ["ghcr.io/onedr0p/radarr"],
-      "customChangelogUrl": "https://github.com/Radarr/Radarr",
+      matchPackageNames: ["ghcr.io/onedr0p/radarr"],
+      changelogUrl: "https://github.com/Radarr/Radarr",
     },
     {
-      "matchPackageNames": ["ghcr.io/onedr0p/prowlarr"],
-      "customChangelogUrl": "https://github.com/Prowlarr/Prowlarr",
+      matchPackageNames: ["ghcr.io/onedr0p/prowlarr"],
+      changelogUrl: "https://github.com/Prowlarr/Prowlarr",
     },
     {
-      "matchPackageNames": ["ghcr.io/hotio/plex"],
-      "customChangelogUrl": "https://forums.plex.tv/t/plex-media-server/30447/651",
+      matchPackageNames: ["ghcr.io/hotio/plex"],
+      changelogUrl: "https://forums.plex.tv/t/plex-media-server/30447/651",
     },
   ],
 }
