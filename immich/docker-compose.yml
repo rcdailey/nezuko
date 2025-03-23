@@ -7,6 +7,17 @@
 #
 # The compose file on main may not be compatible with the latest release.
 
+networks:
+  reverse_proxy:
+    external: true
+    driver: overlay
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-file: "1"
+    max-size: "50m"
+
 volumes:
   model-cache:
 
@@ -14,18 +25,28 @@ services:
   server:
     image: ghcr.io/immich-app/immich-server:v1.129.0
     restart: unless-stopped
+    logging: *logging
     depends_on: [redis, database]
-    ports: [2283:2283]
     env_file: [.env]
+    # ports: [2283:2283]
+    networks:
+      default:
+      reverse_proxy:
+        aliases: [immich]
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./upload:/usr/src/app/upload
-      - /mnt/user/photos/immich:/usr/src/app/upload/library
+      - /mnt/user/photos/immich/library:/usr/src/app/upload/library
+      - /mnt/user/photos/immich/upload:/usr/src/app/upload/upload
       # - /mnt/user/photos/external:/photos:ro
+    labels:
+      - swag=enable
+      - swag_url=photos.*
 
   machine-learning:
     image: ghcr.io/immich-app/immich-machine-learning:v1.129.0
     restart: unless-stopped
+    logging: *logging
     env_file: [.env]
     volumes:
       - model-cache:/cache
@@ -33,12 +54,14 @@ services:
   redis:
     image: redis
     restart: unless-stopped
+    logging: *logging
     healthcheck:
       test: redis-cli ping || exit 1
 
   database:
     image: tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:739cdd626151ff1f796dc95a6591b55a714f341c737e27f045019ceabf8e8c52
     restart: unless-stopped
+    logging: *logging
     env_file: [.env]
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
