@@ -23,7 +23,7 @@ volumes:
 
 services:
   server:
-    image: ghcr.io/immich-app/immich-server:v1.129.0
+    image: ghcr.io/immich-app/immich-server:v1.130.2
     restart: unless-stopped
     logging: *logging
     depends_on: [redis, database]
