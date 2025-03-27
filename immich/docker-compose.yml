@@ -23,7 +23,7 @@ volumes:
 
 services:
   server:
-    image: ghcr.io/immich-app/immich-server:v1.129.0
+    image: ghcr.io/immich-app/immich-server:v1.130.3
     restart: unless-stopped
     logging: *logging
     depends_on: [redis, database]
@@ -44,7 +44,7 @@ services:
       - swag_url=photos.*
 
   machine-learning:
-    image: ghcr.io/immich-app/immich-machine-learning:v1.129.0
+    image: ghcr.io/immich-app/immich-machine-learning:v1.130.3
     restart: unless-stopped
     logging: *logging
     env_file: [.env]
