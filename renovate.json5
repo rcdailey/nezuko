@@ -82,7 +82,7 @@
       matchDatasources: ["docker"],
       groupName: "all immich docker image versions",
       groupSlug: "all-immich",
-      changelogUrl: "https://github.com/immich-app/immich",
+      changelogUrl: "https://github.com/immich-app/immich/releases",
     },
   ],
 }
