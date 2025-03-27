@@ -76,5 +76,13 @@
       matchPackageNames: ["ghcr.io/hotio/plex"],
       changelogUrl: "https://forums.plex.tv/t/plex-media-server/30447/651",
     },
+    {
+      // Group immich docker image versions
+      matchPackageNames: ["/^ghcr\\.io/immich-app/"],
+      matchDatasources: ["docker"],
+      groupName: "all immich docker image versions",
+      groupSlug: "all-immich",
+      changelogUrl: "https://github.com/immich-app/immich",
+    },
   ],
 }
