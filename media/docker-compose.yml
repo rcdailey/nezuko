@@ -237,7 +237,7 @@ services:
 
   #########################################################################
   kometa:
-    image: kometateam/kometa:v2.1.0
+    image: kometateam/kometa:v2.2.0
     restart: unless-stopped
     container_name: kometa
     logging: *logging
