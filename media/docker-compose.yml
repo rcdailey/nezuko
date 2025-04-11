@@ -20,7 +20,7 @@ x-logging: &logging
 services:
   #########################################################################
   plex:
-    image: ghcr.io/hotio/plex:release-1.41.5.9522-a96edc606
+    image: ghcr.io/hotio/plex:release-1.41.6.9685-d301f511a
     restart: unless-stopped
     container_name: plex
     logging: *logging
@@ -51,7 +51,7 @@ services:
 
   #########################################################################
   sabnzbd:
-    image: ghcr.io/hotio/sabnzbd:release-4.5.0
+    image: ghcr.io/hotio/sabnzbd:release-4.5.1
     restart: unless-stopped
     container_name: sabnzbd
     logging: *logging
