@@ -7,7 +7,7 @@ services:
   app:
     image: louislam/uptime-kuma:1.23.16
     restart: unless-stopped
-    container_name: uptime
+    container_name: uptime-kuma
     networks: [reverse_proxy]
     # ports: [3001:3001]
     volumes:
@@ -15,7 +15,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - TZ=America/Chicago
-    # NOTE: Cannot use auto proxy here since we need to use two subdomains!
-    # labels:
-    #   - swag=enable
-    #   - swag_url=uptime.*
+    labels:
+      - swag=enable
+      - swag_auth=authentik
+      - swag_url=uptime.*
