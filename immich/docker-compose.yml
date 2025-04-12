@@ -35,10 +35,10 @@ services:
         aliases: [immich]
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./upload:/usr/src/app/upload
-      - /mnt/user/photos/immich/library:/usr/src/app/upload/library
-      - /mnt/user/photos/immich/upload:/usr/src/app/upload/upload
-      # - /mnt/user/photos/external:/photos:ro
+      - /mnt/user/photos/immich:/usr/src/app/upload
+      # Override some paths for SSD performance
+      - ./upload/thumbs:/usr/src/app/upload/thumbs
+      - ./upload/profile:/usr/src/app/upload/profile
     labels:
       - swag=enable
       - swag_url=photos.*
