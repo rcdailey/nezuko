@@ -5,7 +5,7 @@
   packageRules: [
     {
       // Ignore updates to these packages
-      matchPackageNames: ["getmeili/meilisearch"],
+      matchPackageNames: ["getmeili/meilisearch", "mongo"],
       matchManagers: ["docker-compose"],
       enabled: false,
     },
