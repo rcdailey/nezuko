@@ -275,7 +275,7 @@ services:
 
   #########################################################################
   tautulli:
-    image: ghcr.io/hotio/tautulli:release-2.15.1
+    image: ghcr.io/hotio/tautulli:release-2.15.2
     restart: unless-stopped
     container_name: tautulli
     logging: *logging
