@@ -6,7 +6,7 @@
     {
       // Ignore updates to database containers.
       // These often require manual intervention to update the database schema.
-      matchPackageNames: ["getmeili/meilisearch", "mongo", "**postgres", "**mariadb"],
+      matchPackageNames: ["getmeili/meilisearch", "mongo", "/.*postgres/", "/.*mariadb/"],
       matchManagers: ["docker-compose"],
       enabled: false,
     },
