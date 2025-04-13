@@ -34,14 +34,6 @@
       versionCompatibility: "^main-v(?<version>\\d+\\.\\d+\\.\\d+)-(?<compatibility>.+)$",
     },
     {
-      matchPackageNames: ["docker.io/library/postgres"],
-      changelogUrl: "https://github.com/postgres/postgres",
-    },
-    {
-      matchPackageNames: ["getmeili/meilisearch"],
-      changelogUrl: "https://github.com/meilisearch/meilisearch",
-    },
-    {
       matchPackageNames: ["ghcr.io/danny-avila/librechat-rag-api-dev-lite"],
       changelogUrl: "https://github.com/danny-avila/rag_api",
     },
