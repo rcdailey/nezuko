@@ -1,0 +1,27 @@
+name: czkawka
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-file: "1"
+    max-size: "50m"
+
+services:
+  app:
+    image: jlesage/czkawka:latest
+    container_name: czkawka
+    restart: unless-stopped
+    logging: *logging
+    # networks: [reverse_proxy]
+    ports: [50800:5800]
+    volumes:
+      - ./config:/config
+      - /mnt/user/game-logs:/storage
+    environment:
+      - TZ=America/Chicago
+      - USER_ID=$DOCKER_UID
+      - GROUP_ID=$DOCKER_GID
+    # labels:
+    #   - swag=enable
+    #   - swag_auth=authentik
+    #   - swag_url=czkawka.*
