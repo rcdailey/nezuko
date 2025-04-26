@@ -1,0 +1,8 @@
+services:
+  officer:
+    image: ghcr.io/funkyfuture/deck-chores:1
+    restart: unless-stopped
+    environment:
+      TIMEZONE: America/Chicago
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
