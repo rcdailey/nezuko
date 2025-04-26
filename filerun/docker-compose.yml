@@ -8,10 +8,17 @@ networks:
 volumes:
   esearch:
 
+x-logging: &logging
+  driver: json-file
+  options:
+    max-file: "1"
+    max-size: "50m"
+
 services:
   db:
     image: mariadb:lts
     restart: unless-stopped
+    logging: *logging
     environment:
       MARIADB_DATABASE: filerun
       MARIADB_USER: db
@@ -32,6 +39,8 @@ services:
     restart: unless-stopped
     depends_on: [db]
     networks: [reverse_proxy, default]
+    logging: *logging
+    # hostname: filerun
     # ports: [10080:80]
     environment:
       FR_DB_HOST: db
@@ -58,11 +67,13 @@ services:
   tika:
     image: logicalspark/docker-tikaserver
     restart: unless-stopped
+    logging: *logging
 
   esearch:
     image: elasticsearch:8.18.0
     restart: unless-stopped
     hostname: elasticsearch
+    logging: *logging
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true

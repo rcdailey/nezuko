@@ -4,16 +4,19 @@ networks:
     driver: overlay
   dockerproxy:
 
+x-logging: &logging
+  driver: json-file
+  options:
+    max-file: "1"
+    max-size: "5m"
+
 services:
   dockerproxy:
     image: ghcr.io/tecnativa/docker-socket-proxy:0.3.0
     restart: unless-stopped
     container_name: dockerproxy
     networks: [dockerproxy]
-    logging:
-      driver: local
-      options:
-        max-size: 1m
+    logging: *logging
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
@@ -26,10 +29,7 @@ services:
     container_name: swag
     networks: [reverse_proxy, dockerproxy]
     depends_on: [dockerproxy]
-    logging:
-      driver: local
-      options:
-        max-size: 1m
+    logging: *logging
     ports:
       - 30080:80
       - 30443:443
