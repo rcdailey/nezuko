@@ -48,12 +48,12 @@ services:
       - ./html:/var/www/html
       - /mnt/user/filerun:/user-files
     labels:
-      - swag=enable
-      - swag_url=cloud.*
-      - swag_port=80
-      - swag_proto=http
-      - deck-chores.filerun.command=php /var/www/html/cron/process_search_index_queue.php
-      - deck-chores.filerun.interval=5m
+      swag: enable
+      swag_url: cloud.*
+      swag_port: 80
+      swag_proto: http
+      deck-chores.filerun.command: php /var/www/html/cron/process_search_index_queue.php
+      deck-chores.filerun.interval: 5m
 
   tika:
     image: logicalspark/docker-tikaserver
