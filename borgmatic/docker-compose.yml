@@ -20,8 +20,8 @@ services:
       - DOCKER_GID=$DOCKER_GID
     volumes:
       - junk:/mnt/source
-      - ./data/borg/repo:/mnt/borg-repository
       - junk:/root/.borgmatic
+      - ./data/borg/repo:/mnt/borg-repository
       - ./data/borgmatic:/etc/borgmatic.d
       - ./data/borg/config:/root/.config/borg
       - ./data/ssh:/root/.ssh
