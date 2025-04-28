@@ -18,9 +18,6 @@ x-logging: &logging
     max-file: "1"
     max-size: "50m"
 
-volumes:
-  model-cache:
-
 services:
   server:
     image: ghcr.io/immich-app/immich-server:v1.132.1
@@ -55,14 +52,21 @@ services:
     security_opt: [no-new-privileges:true]
     cap_drop: [NET_RAW]
     volumes:
-      - model-cache:/cache
+      - ./ml/.config:/.config
+      - ./ml/.cache:/.cache
+      - ./ml/cache:/cache
 
   redis:
     image: redis
     restart: unless-stopped
     logging: *logging
+    user: $DOCKER_UID:$DOCKER_GID
+    security_opt: [no-new-privileges:true]
+    cap_drop: [NET_RAW]
     healthcheck:
       test: redis-cli ping || exit 1
+    volumes:
+      - ./redis:/data
 
   database:
     image: tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:739cdd626151ff1f796dc95a6591b55a714f341c737e27f045019ceabf8e8c52
