@@ -28,6 +28,9 @@ services:
     logging: *logging
     depends_on: [redis, database]
     env_file: [.env]
+    user: $DOCKER_UID:$DOCKER_GID
+    security_opt: [no-new-privileges:true]
+    cap_drop: [NET_RAW]
     # ports: [2283:2283]
     networks:
       default:
@@ -48,6 +51,9 @@ services:
     restart: unless-stopped
     logging: *logging
     env_file: [.env]
+    user: $DOCKER_UID:$DOCKER_GID
+    security_opt: [no-new-privileges:true]
+    cap_drop: [NET_RAW]
     volumes:
       - model-cache:/cache
 
@@ -63,6 +69,9 @@ services:
     restart: unless-stopped
     logging: *logging
     env_file: [.env]
+    user: $DOCKER_UID:$DOCKER_GID
+    security_opt: [no-new-privileges:true]
+    cap_drop: [NET_RAW]
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}

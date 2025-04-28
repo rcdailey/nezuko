@@ -40,7 +40,7 @@ services:
     depends_on: [db]
     networks: [reverse_proxy, default]
     logging: *logging
-    # hostname: filerun
+    hostname: filerun
     # ports: [10080:80]
     environment:
       FR_DB_HOST: db
