@@ -13,7 +13,7 @@ x-logging: &logging
 
 services:
   server:
-    image: ghcr.io/immich-app/immich-server:v1.132.1
+    image: ghcr.io/immich-app/immich-server:v1.132.3
     restart: unless-stopped
     logging: *logging
     depends_on: [redis, database]
