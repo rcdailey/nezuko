@@ -26,6 +26,7 @@ services:
       - ./data/borg/config:/root/.config/borg
       - ./data/ssh:/root/.ssh
       - ./data/borg/cache:/root/.cache/borg
+      - ./data/borg/state:/root/.local/state/borgmatic
 
       # For doing a 'borgmatic mount' to restore files
       - ./restore:/restore

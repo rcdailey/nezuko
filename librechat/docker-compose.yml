@@ -51,6 +51,7 @@ services:
     logging: *default-logging
     volumes:
       - ./data-node:/data/db
+      - ./mongo-configdb:/data/configdb
     command: mongod --noauth
 
   meilisearch:
