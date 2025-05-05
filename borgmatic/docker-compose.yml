@@ -1,12 +1,19 @@
 volumes:
   junk:
 
+networks:
+  borgmatic_backup:
+    name: borgmatic_backup
+    external: true
+
 services:
   borgmatic:
     image: ghcr.io/borgmatic-collective/borgmatic:2.0.5
     container_name: borgmatic
     restart: unless-stopped
-    network_mode: bridge
+    networks: [default, borgmatic_backup]
+    # See: https://github.com/borgmatic-collective/docker-borgmatic/issues/412
+    healthcheck: { disable: true }
     cap_add:
       - SYS_ADMIN # Required for FUSE
     devices:

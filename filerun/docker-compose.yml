@@ -4,6 +4,8 @@ networks:
   reverse_proxy:
     external: true
     driver: overlay
+  borgmatic_backup:
+    external: true
 
 volumes:
   esearch:
@@ -19,6 +21,10 @@ services:
     image: mariadb:lts
     restart: unless-stopped
     logging: *logging
+    networks:
+      default:
+      borgmatic_backup:
+        aliases: [filerun-database]
     environment:
       MARIADB_DATABASE: filerun
       MARIADB_USER: db

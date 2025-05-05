@@ -4,6 +4,8 @@ networks:
   reverse_proxy:
     external: true
     driver: overlay
+  borgmatic_backup:
+    external: true
 
 x-logging: &logging
   driver: json-file
@@ -64,6 +66,10 @@ services:
   database:
     image: tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:739cdd626151ff1f796dc95a6591b55a714f341c737e27f045019ceabf8e8c52
     restart: unless-stopped
+    networks:
+      default:
+      borgmatic_backup:
+        aliases: [immich-database]
     logging: *logging
     env_file: [.env]
     user: $DOCKER_UID:$DOCKER_GID
