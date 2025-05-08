@@ -39,6 +39,7 @@ services:
     #   - /dev/dri:/dev/dri
     volumes:
       - ./plex/config:/config
+      - ./plex/db_backup:/db_backup
       - plex-transcode:/transcode
       - /mnt/user/media:/data/media
     environment:
