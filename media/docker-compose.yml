@@ -93,7 +93,7 @@ services:
     # - 8118:8118 # Privoxy
     volumes:
       - ./qbittorrent:/config
-      - /mnt/user/media/.torrents:/data/media/.torrents
+      - /mnt/user/media/.torrents:/media/.torrents
     environment:
       - TZ=America/Chicago
       - PUID=$DOCKER_UID

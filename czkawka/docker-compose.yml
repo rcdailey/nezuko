@@ -16,7 +16,8 @@ services:
     ports: [50800:5800]
     volumes:
       - ./config:/config
-      - /mnt/user/game-logs:/storage
+      - /mnt/user/game-logs:/data/game-logs
+      - /mnt/user/photos/immich/library:/data/immich
     environment:
       - TZ=America/Chicago
       - USER_ID=$DOCKER_UID
