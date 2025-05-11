@@ -41,7 +41,7 @@ services:
       - ./plex/config:/config
       - ./plex/db_backup:/db_backup
       - plex-transcode:/transcode
-      - /mnt/user/media:/data/media
+      - /mnt/user/media:/media
     environment:
       - TZ=America/Chicago
       - PUID=$DOCKER_UID
@@ -61,7 +61,7 @@ services:
     #   - 8080:8080
     volumes:
       - ./sabnzbd:/config
-      - /mnt/user/media/.usenet:/data/media/.usenet
+      - /mnt/user/media/.usenet:/media/.usenet
     environment:
       - TZ=America/Chicago
       - PUID=$DOCKER_UID
@@ -143,7 +143,7 @@ services:
       - TZ=America/Chicago
     volumes:
       - ./sonarr:/config
-      - /mnt/user/media:/data/media
+      - /mnt/user/media:/media
     labels:
       - swag=enable
       - swag_auth=authentik
@@ -162,7 +162,7 @@ services:
       - TZ=America/Chicago
     volumes:
       - ./sonarr_anime:/config
-      - /mnt/user/media:/data/media
+      - /mnt/user/media:/media
     labels:
       - swag=enable
       - swag_auth=authentik
@@ -183,7 +183,7 @@ services:
     #  - 7878:7878
     volumes:
       - ./radarr:/config
-      - /mnt/user/media:/data/media
+      - /mnt/user/media:/media
     environment:
       - TZ=America/Chicago
     labels:
@@ -202,7 +202,7 @@ services:
     #   - 7879:7878
     volumes:
       - ./radarr4k:/config
-      - /mnt/user/media:/data/media
+      - /mnt/user/media:/media
     environment:
       - TZ=America/Chicago
     labels:
@@ -225,7 +225,7 @@ services:
     #   - 7878:7878
     volumes:
       - ./radarr_anime:/config
-      - /mnt/user/media:/data/media
+      - /mnt/user/media:/media
     environment:
       - TZ=America/Chicago
     labels:
@@ -263,7 +263,7 @@ services:
     #   - 6767:6767
     volumes:
       - ./bazarr:/config
-      - /mnt/user/media:/data/media
+      - /mnt/user/media:/media
     environment:
       - TZ=America/Chicago
       - PUID=$DOCKER_UID
@@ -326,7 +326,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./unpackerr:/config
-      - /mnt/user/media:/data/media
+      - /mnt/user/media:/media
     environment:
       - TZ=America/Chicago
       - PUID=$DOCKER_UID
