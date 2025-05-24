@@ -71,8 +71,7 @@
     },
     {
       // Group immich docker image versions
-      matchPackageNames: ["/^ghcr\\.io/immich-app/"],
-      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/immich-app/*"],
       groupName: "all immich docker image versions",
       groupSlug: "all-immich",
       changelogUrl: "https://github.com/immich-app/immich/releases",
