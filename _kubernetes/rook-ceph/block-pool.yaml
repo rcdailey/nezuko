@@ -1,0 +1,24 @@
+# Ceph Block Pool Configuration
+# This defines how your data is stored and replicated across nodes
+
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
+  name: replicapool
+  namespace: rook-ceph
+spec:
+  # Failure domain - replicate across different hosts (nodes)
+  failureDomain: host # Replication settings
+  replicated:
+    size: 3 # Three copies across lucy, marin, and nami for optimal redundancy
+    # Three-node cluster provides proper fault tolerance
+
+    # Minimum replicas required for I/O (should be size-1 for availability)
+    requireSafeReplicaSize: true # Production setting for data safety
+
+  # Compression (optional - saves space but uses more CPU)
+  compressionMode: none # Options: none, aggressive, passive, force
+
+  # Mirroring (disabled for homelab)
+  mirroring:
+    enabled: false

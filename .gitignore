@@ -1,9 +1,11 @@
+# Don't care about vs code workspace files at the root
+*.code-workspace
+*.stackdump
+
 # Ignore contents of all subdirectories by default, which is usually the compose projects.
 */*
 
-# Don't care about vs code workspace files at the root
-*.code-workspace
-
 # Do not ignore these files/dirs
-!.vscode/
+![._]*/*
 !*/docker-compose.yml
+!memory-bank/**

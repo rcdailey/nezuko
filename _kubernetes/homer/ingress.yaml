@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: homer
+  annotations:
+    # Add your ingress controller specific annotations here
+    # For example, if using nginx-ingress:
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+    # If you need auth integration (like your SWAG authentik setup):
+    # nginx.ingress.kubernetes.io/auth-url: "https://auth.dailey.app/outpost.goauthentik.io/auth/nginx"
+    # nginx.ingress.kubernetes.io/auth-signin: "https://auth.dailey.app/outpost.goauthentik.io/start?rd=$escaped_request_uri"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: home.dailey.app
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: homer
+            port:
+              number: 8080

@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: swag-backend
+  namespace: ingress-nginx
+spec:
+  type: ClusterIP
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 30443
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 30080
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: swag-backend
+  namespace: ingress-nginx
+subsets:
+- addresses:
+  - ip: 192.168.1.58
+  ports:
+  - name: https
+    port: 30443
+    protocol: TCP
+  - name: http
+    port: 30080
+    protocol: TCP

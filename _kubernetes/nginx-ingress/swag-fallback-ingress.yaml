@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: swag-fallback
+  namespace: ingress-nginx
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
+    # Lower priority so specific rules take precedence
+    nginx.ingress.kubernetes.io/priority: "1"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "*.dailey.app"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: swag-backend
+            port:
+              number: 443

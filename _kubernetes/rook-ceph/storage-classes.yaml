@@ -1,0 +1,72 @@
+# Storage Classes for Rook Ceph
+# These define different "types" of storage that applications can request
+---
+# RBD (RADOS Block Device) Storage Class
+# Provides high-performance block storage with replication across nodes
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: rook-ceph-block
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: rook-ceph.rbd.csi.ceph.com
+parameters:
+  # Ceph cluster identifier - must match CSI config
+  clusterID: rook-ceph
+
+  # Ceph pool where data will be stored
+  pool: replicapool
+
+  # RBD image format
+  imageFormat: "2"
+
+  # RBD image features - enhanced for real Linux kernels
+  imageFeatures: layering,fast-diff,object-map,deep-flatten,exclusive-lock
+
+  # CSI driver settings
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
+  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+
+  # Filesystem type
+  csi.storage.k8s.io/fstype: ext4
+
+# Allow volume expansion (you can grow volumes later)
+allowVolumeExpansion: true
+
+# Reclaim policy - what happens when PVC is deleted
+reclaimPolicy: Delete
+
+# Volume binding mode
+volumeBindingMode: Immediate
+
+# ---
+# # CephFS Storage Class - DISABLED until filesystem is created
+# # This provides shared filesystem storage (like NFS) for multi-pod access
+# # To enable: First create CephFilesystem resource, then uncomment this
+# apiVersion: storage.k8s.io/v1
+# kind: StorageClass
+# metadata:
+#   name: rook-cephfs
+# provisioner: rook-ceph.cephfs.csi.ceph.com
+# parameters:
+#   # CephFS filesystem name
+#   fsName: myfs
+#
+#   # Ceph pool for data
+#   pool: myfs-replicated
+#
+#   # CSI driver settings
+#   csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+#   csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+#   csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
+#   csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+#   csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+#   csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+#
+# allowVolumeExpansion: true
+# reclaimPolicy: Delete
+# volumeBindingMode: Immediate
