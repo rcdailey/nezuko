@@ -1,0 +1,64 @@
+# Rook Ceph Toolbox - Debug and Admin Pod
+# Provides Ceph CLI tools with proper authentication for cluster management
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rook-ceph-tools
+  namespace: rook-ceph
+  labels:
+    app: rook-ceph-tools
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rook-ceph-tools
+  template:
+    metadata:
+      labels:
+        app: rook-ceph-tools
+    spec:
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+      - name: rook-ceph-tools
+        image: rook/ceph:v1.17.4
+        command:
+        - /bin/bash
+        - -c
+        - |
+          # Keep the pod running for interactive access
+          sleep infinity
+        imagePullPolicy: IfNotPresent
+        tty: true
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 100m
+          limits:
+            memory: 512Mi
+            cpu: 500m
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 2016
+          runAsGroup: 2016
+          capabilities:
+            drop: ["ALL"]
+        volumeMounts:
+        - mountPath: /etc/ceph
+          name: ceph-config
+        - mountPath: /var/lib/rook
+          name: mon-endpoint-volume
+      volumes:
+      - name: ceph-config
+        emptyDir: {}
+      - name: mon-endpoint-volume
+        configMap:
+          name: rook-ceph-mon-endpoints
+          items:
+          - key: data
+            path: mon-endpoints
+      tolerations:
+      - key: "node.kubernetes.io/unreachable"
+        operator: "Exists"
+        effect: "NoExecute"
+        tolerationSeconds: 5
