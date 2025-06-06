@@ -23,3 +23,17 @@ spec:
             cpu: 500m
         ports:
         - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: homer-config
+        volumeMounts:
+        - name: assets
+          mountPath: /www/assets
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+      volumes:
+      - name: assets
+        persistentVolumeClaim:
+          claimName: homer-assets
+      restartPolicy: Always

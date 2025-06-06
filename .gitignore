@@ -7,3 +7,4 @@
 # Do not ignore these files/dirs
 !.vscode/
 !*/docker-compose.yml
+!/_kubernetes/**
