@@ -5,6 +5,7 @@
 *.code-workspace
 
 # Do not ignore these files/dirs
-!.vscode/
+!.vscode/**
 !*/docker-compose.yml
 !/_kubernetes/**
+!.github/**

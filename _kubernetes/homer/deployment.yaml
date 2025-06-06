@@ -25,10 +25,16 @@ spec:
         - containerPort: 8080
         envFrom:
         - configMapRef:
-            name: homer-config
+            name: homer-env-config
         volumeMounts:
         - name: assets
           mountPath: /www/assets
+        - name: config-files
+          mountPath: /www/assets/config.yml
+          subPath: config.yml
+        - name: config-files
+          mountPath: /www/assets/manifest.json
+          subPath: manifest.json
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
@@ -36,4 +42,7 @@ spec:
       - name: assets
         persistentVolumeClaim:
           claimName: homer-assets
+      - name: config-files
+        configMap:
+          name: homer-assets-config
       restartPolicy: Always

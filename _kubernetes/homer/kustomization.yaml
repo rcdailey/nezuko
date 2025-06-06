@@ -9,6 +9,11 @@ resources:
 - pvc.yaml
 - ingress.yaml
 
+configMapGenerator:
+- name: homer-assets-config
+  files:
+  - config.yml
+
 commonLabels:
   app: homer
 

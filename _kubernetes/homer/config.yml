@@ -1,0 +1,131 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bastienwirtz/homer/main/.schema/config-schema.json
+---
+# Homepage configuration
+# See https://fontawesome.com/v5/search for icons options
+
+title: Nami
+subtitle: Homepage
+logo: "https://raw.githubusercontent.com/your-repo/homer-assets/main/nami.png"
+# icon: "fas fa-skull-crossbones" # Optional icon
+
+header: false
+footer: false
+columns: "4"
+
+# Optional theme customization
+theme: dark
+colors:
+  dark:
+    highlight-primary: "#3367d6"
+    highlight-secondary: "#4285f4"
+    highlight-hover: "#5a95f5"
+    background: "#131313"
+    card-background: "#2b2b2b"
+    text: "#eaeaea"
+    text-header: "#ffffff"
+    text-title: "#fafafa"
+    text-subtitle: "#f5f5f5"
+    card-shadow: rgba(0, 0, 0, 0.4)
+    link: "#3273dc"
+    link-hover: "#ffdd57"
+    icon-background: "rgba(0, 0, 0, 0.2)"
+  light:
+    highlight-primary: "#3367d6"
+    highlight-secondary: "#4285f4"
+    highlight-hover: "#5a95f5"
+    background: "#f5f5f5"
+    card-background: "#ffffff"
+    text: "#363636"
+    text-header: "#ffffff"
+    text-title: "#303030"
+    text-subtitle: "#424242"
+    card-shadow: rgba(0, 0, 0, 0.1)
+    link: "#3273dc"
+    link-hover: "#363636"
+    icon-background: "rgba(255, 255, 255, 0.78)"
+
+# Optional navbar
+# links: [] # Allows for navbar (dark mode, layout, and search) without any links
+links:
+- name: Github
+  icon: fab fa-github
+  url: https://github.com/bastienwirtz/homer
+  target: _blank # optional html a tag target attribute
+- name: Wiki
+  icon: fas fa-book
+  url: https://www.wikipedia.org/
+# this will link to a second homer page that will load config from page2.yml and keep the same theme and color (config files should be placed under the public assets folder)
+# - name: "Second Page"
+#   icon: "fas fa-file-alt"
+#   url: "#page2"
+
+# Services
+# First level array represent a group.
+# Leave only a "items" key if not using group (group name, icon & tagstyle are optional, section separation will not be displayed).
+services:
+- name: Applications
+  icon: fas fa-code-branch
+  # A path to an image can also be provided. Note that icon take precedence if both icon and logo are set.
+  # logo: "path/to/logo"
+  items:
+  - name: Authentik
+    logo: "https://raw.githubusercontent.com/your-repo/homer-assets/main/tools/authentik.svg"
+    # Alternatively a Font Awesome icon can be used
+    # icon: fab fa-jenkins
+    subtitle: Identity provider
+    tag: sso
+    keywords: sso auth
+    url: https://auth.home.lab
+    target: _blank # optional html a tag target attribute
+  - name: Immich
+    logo: "https://raw.githubusercontent.com/your-repo/homer-assets/main/tools/immich.svg"
+    subtitle: Photo and video backup solution
+    tag: photos
+    keywords: photos backup immich
+    url: https://immich.home.lab
+    target: _blank
+  - name: Plex
+    logo: "https://raw.githubusercontent.com/your-repo/homer-assets/main/tools/plex.svg"
+    subtitle: Media streaming
+    tag: media
+    keywords: plex media streaming
+    url: https://plex.home.lab
+    target: _blank
+  - name: Stash
+    logo: "https://raw.githubusercontent.com/your-repo/homer-assets/main/tools/stash.svg"
+    subtitle: Media organizer
+    tag: media
+    keywords: stash media organize
+    url: https://stash.home.lab
+    target: _blank
+  - name: Librechat
+    logo: "https://raw.githubusercontent.com/your-repo/homer-assets/main/tools/librechat.svg"
+    subtitle: AI chat interface
+    tag: ai
+    keywords: ai chat librechat
+    url: https://librechat.home.lab
+    target: _blank
+  - name: Filerun
+    logo: "https://raw.githubusercontent.com/your-repo/homer-assets/main/tools/filerun.svg"
+    subtitle: File manager
+    tag: files
+    keywords: files filerun manager
+    url: https://filerun.home.lab
+    target: _blank
+- name: System
+  icon: fas fa-server
+  items:
+  - name: Uptime Kuma
+    logo: "https://raw.githubusercontent.com/your-repo/homer-assets/main/tools/uptime-kuma.svg"
+    subtitle: Status page
+    tag: monitoring
+    keywords: uptime status monitoring
+    url: https://status.home.lab
+    target: _blank
+  - name: Borgmatic
+    logo: "https://raw.githubusercontent.com/your-repo/homer-assets/main/tools/borgmatic.svg"
+    subtitle: Backup solution
+    tag: backup
+    keywords: backup borgmatic
+    url: https://backup.home.lab
+    target: _blank
