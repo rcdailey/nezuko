@@ -11,6 +11,9 @@ metadata:
     storageclass.kubernetes.io/is-default-class: "true"
 provisioner: rook-ceph.rbd.csi.ceph.com
 parameters:
+  # Ceph cluster identifier - must match CSI config
+  clusterID: rook-ceph
+
   # Ceph pool where data will be stored
   pool: replicapool
 

@@ -1,0 +1,16 @@
+{
+  "yaml.schemas": {
+    "kubernetes": [
+      "_kubernetes/**/*.yaml",
+      "_kubernetes/**/*.yml"
+    ]
+  },
+  "files.associations": {
+    "_kubernetes/**/*.yaml": "kubernetes",
+    "_kubernetes/**/*.yml": "kubernetes"
+  },
+  "[yaml]": {
+    "editor.snippetSuggestions": "none"
+  },
+  "yaml.schemaStore.enable": false
+}

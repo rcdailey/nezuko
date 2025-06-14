@@ -4,9 +4,8 @@ metadata:
   name: homer-assets
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
+  storageClassName: rook-ceph-block
   resources:
     requests:
       storage: 1Gi
-  # Add storageClassName if you have specific storage requirements
-  # storageClassName: "your-storage-class"

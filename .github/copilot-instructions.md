@@ -4,12 +4,32 @@
 
 **File Location**: Updates to Copilot instructions MUST be made to `.github/copilot-instructions.md`
 
+**Structural Organization Requirements**: Before making ANY edit to this file:
+
+- **Read the entire file structure** to understand organization and flow
+- **Maintain logical grouping** - Place related content in appropriate sections
+- **Preserve hierarchy** - Keep section levels and relationships intact
+- **Update holistically** - Consider impact on other sections when making changes
+
 **Maintenance Philosophy**: When updating this file:
 
+- **Always examine for consolidation opportunities** - Reorganize and merge related information to
+  reduce file size
+- **Keep information logically together** - Group related content in appropriate sections at all
+  times
+- **Order by importance** - Most critical directives and sections go at the top of the file
 - Holistically review and restructure for logical flow and priority
 - Keep content minimal - verbose instructions consume context window
-- Group related information together
 - Remove outdated or redundant information
+
+**Automatic Learning Documentation**: When critical mistakes, misunderstandings, or breakthrough
+insights occur during problem-solving:
+
+- **Document lessons learned** in BROAD, GENERALIZABLE terms
+- **Avoid specific technical details** that make lessons non-transferable
+- **Focus on methodology and approach changes** rather than particular configurations
+- **Update relevant sections** to prevent similar issues in future sessions
+- **Capture mindset shifts** that improve learning and troubleshooting effectiveness
 
 ## KNOWN BUG: Terminal Integration
 
@@ -41,6 +61,8 @@ This is a learning environment for Kubernetes. Always:
 - Suggest learning resources or next steps for deeper understanding
 - Use real-world analogies to explain complex concepts
 - Point out common pitfalls and how to avoid them
+- **Prioritize k9s**: When teaching manual operations, always prioritize k9s as the primary tool
+  over raw kubectl commands. k9s provides better visualization and learning experience.
 - **Research Online**: When working with specific tools (Kubernetes, operators, frameworks), search
   official documentation online to provide accurate, up-to-date information rather than relying on
   potentially outdated training data
@@ -106,14 +128,19 @@ prioritize learning and functionality over enterprise complexity.
 
 ### Docker to Kubernetes Translation Patterns
 
-| Docker Concept         | Kubernetes Equivalent               | Teaching Note                                                            |
-| ---------------------- | ----------------------------------- | ------------------------------------------------------------------------ |
-| `docker-compose.yml`   | Multiple YAML manifests             | K8s separates concerns into different resource types                     |
-| `./config` bind mounts | PersistentVolumeClaims              | PVCs provide persistent storage that survives pod restarts               |
-| `.env` files           | ConfigMaps + Secrets                | K8s separates sensitive (Secrets) from non-sensitive (ConfigMaps) config |
-| `networks`             | Services + Ingress                  | Services handle internal communication, Ingress handles external access  |
-| `depends_on`           | Init containers or readiness probes | K8s handles dependencies differently than Docker Compose                 |
-| Health checks          | Liveness + Readiness probes         | K8s has more sophisticated health checking                               |
+**Core Concepts:**
+
+- **`docker-compose.yml`** → **Multiple YAML manifests** - K8s separates concerns into different
+  resource types
+- **`./config` bind mounts** → **PersistentVolumeClaims** - PVCs provide persistent storage that
+  survives pod restarts
+- **`.env` files** → **ConfigMaps + Secrets** - K8s separates sensitive (Secrets) from non-sensitive
+  (ConfigMaps) config
+- **`networks`** → **Services + Ingress** - Services handle internal communication, Ingress handles
+  external access
+- **`depends_on`** → **Init containers or readiness probes** - K8s handles dependencies differently
+  than Docker Compose
+- **Health checks** → **Liveness + Readiness probes** - K8s has more sophisticated health checking
 
 ## Implementation Standards
 
@@ -167,6 +194,27 @@ _kubernetes/
 - **Probes**: Readiness (traffic routing) vs Liveness (restart decisions) vs Startup (slow-starting
   containers)
 
+### Configuration Verification Principle
+
+**Core Rule**: Always verify actual configuration requirements rather than making assumptions about
+resource identifiers or parameters.
+
+**Common Mistakes**:
+
+- Assuming resource names match their underlying identifiers
+- Using documentation examples without checking your specific setup
+- Copying configurations without understanding the abstraction layers
+
+**Best Practice**: When configuring integrations (storage, networking, operators):
+
+1. **Check existing configuration** - Look at ConfigMaps, existing resources, and running systems
+2. **Verify abstraction layers** - Understand what identifiers each layer expects
+3. **Test incrementally** - Apply changes and validate they work before proceeding
+4. **Question assumptions** - If something "should work" but doesn't, check your assumptions
+
+**Teaching Point**: Configuration debugging starts with understanding what the system actually
+expects, not what you think it should expect.
+
 ## Helmfile Best Practices
 
 **Always explain these concepts when implementing:**
@@ -183,3 +231,22 @@ _kubernetes/
 - **Array Merging**: Remember arrays don't merge across layers - use YAML anchors or `readFile` for
   reuse
 - **Template Files**: Use `.gotmpl` extension for advanced templating with `---` separated parts
+
+## k9s Essential Commands
+
+**Navigation & Resources:**
+
+- `:resource` - View resources (`:pods`, `:deploy`, `:svc`, `:pvc`, `:nodes`)
+- `:workload` - View all workload resources (deployments, pods, services, replicasets) in one view
+- `:ns` - Switch namespaces | `:ctx` - Switch contexts | `Ctrl+A` - Show all aliases - `/filter` -
+  Filter resources | `Esc` - Clear filter/go back
+
+**Selection & Actions:**
+
+- `j/k` or `↑/↓` - Navigate up/down | `SPACE` - Multi-select | `Ctrl+\` - Clear selection | `Enter`
+- Drill down - `d` - Describe | `y` - View YAML | `e` - Edit | `l` - Logs | `s` - Shell/Scale -
+  `Ctrl+D` - Delete (confirm) | `Ctrl+K` - Kill (force) | `f` - Port-forward
+
+**Useful Views:**
+
+- `:events` - Cluster events | `:xray deploy` - Resource hierarchy | `:pulse` - Cluster overview
