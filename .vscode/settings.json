@@ -1,16 +1,14 @@
 {
   "yaml.schemas": {
-    "kubernetes": [
-      "_kubernetes/**/*.yaml",
-      "_kubernetes/**/*.yml"
-    ]
+    "https://json.schemastore.org/kustomization.json": "_kubernetes/**/kustomization.{yml,yaml}",
+    "kubernetes": ["_kubernetes/**/*.yaml", "!_kubernetes/**/kustomization.{yml,yaml}"]
   },
   "files.associations": {
-    "_kubernetes/**/*.yaml": "kubernetes",
-    "_kubernetes/**/*.yml": "kubernetes"
+    "_kubernetes/**/*.yaml": "yaml",
+    "_kubernetes/**/kustomization.yaml": "yaml"
   },
   "[yaml]": {
     "editor.snippetSuggestions": "none"
   },
-  "yaml.schemaStore.enable": false
+  "yaml.schemaStore.enable": true
 }
