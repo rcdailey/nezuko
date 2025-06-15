@@ -8,11 +8,10 @@ metadata:
   namespace: rook-ceph
 spec:
   # Failure domain - replicate across different hosts (nodes)
-  failureDomain: host
-  # Replication settings
+  failureDomain: host # Replication settings
   replicated:
-    size: 2 # Two copies across lucy and marin for redundancy
-    # Two-node cluster allows proper redundancy
+    size: 3 # Three copies across lucy, marin, and nami for optimal redundancy
+    # Three-node cluster provides proper fault tolerance
 
     # Minimum replicas required for I/O (should be size-1 for availability)
     requireSafeReplicaSize: true # Production setting for data safety

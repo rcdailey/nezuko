@@ -48,8 +48,7 @@ spec:
       dataSource: zero
       iteration: 1
     allowUninstallWithVolumes: false
-
-  # Storage configuration - using raw devices on lucy and marin
+  # Storage configuration - using raw devices across three nodes
   storage:
     useAllNodes: false
     useAllDevices: false
@@ -63,5 +62,10 @@ spec:
     - name: marin
       devices:
       - name: /dev/ubuntu-vg/ceph-osd-1
+        config:
+          osdsPerDevice: "1"
+    - name: nami
+      devices:
+      - name: /dev/sdb
         config:
           osdsPerDevice: "1"
