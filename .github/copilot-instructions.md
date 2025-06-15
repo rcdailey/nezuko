@@ -232,6 +232,59 @@ expects, not what you think it should expect.
   reuse
 - **Template Files**: Use `.gotmpl` extension for advanced templating with `---` separated parts
 
+### Helmfile Over Complex Helm Commands
+
+**MANDATORY**: Always prioritize Helmfile over complex, ephemeral Helm commands.
+
+**Problems with Complex Helm Commands**:
+
+- Ephemeral and hard to recreate
+- Error-prone long command lines
+- Not version controlled
+- Hard to diff changes
+- Difficult rollback procedures
+
+**Helmfile Requirements**:
+
+- **Use Helmfile for all Helm deployments** except simple, one-time installations
+- **Store configuration in version control** (git)
+- **Pin chart versions** for reproducibility
+- **Use environment-specific values** when applicable
+- **Provide clear documentation** for Helmfile workflows
+
+**Example Structure**:
+
+```yaml
+# helmfile.yaml
+helmDefaults:
+  wait: true
+  timeout: 600
+
+repositories:
+  - name: ingress-nginx
+    url: https://kubernetes.github.io/ingress-nginx
+
+releases:
+  - name: nginx-ingress
+    namespace: ingress-nginx
+    createNamespace: true
+    chart: ingress-nginx/ingress-nginx
+    version: "~4.8.0"  # Always pin versions
+    values:
+      - controller:
+          service:
+            type: NodePort
+```
+
+**Always explain these Helmfile concepts when implementing**:
+
+- **Declarative configuration**: Configuration as code in YAML
+- **Version control**: Track changes over time
+- **Environment management**: Dev/staging/prod configurations
+- **Dependency management**: Handle service dependencies
+- **Easy diffs**: Preview changes before applying
+- **Simplified rollbacks**: Clear state tracking
+
 ## k9s Essential Commands
 
 **Navigation & Resources:**
