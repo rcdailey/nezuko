@@ -9,3 +9,7 @@
 ![._]*/*
 !*/docker-compose.yml
 !memory-bank/**
+
+# Claude Code local files
+*.local.json
+*.local.md
