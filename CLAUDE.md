@@ -2,7 +2,9 @@
 
 ## Project Overview
 
-**Nezuko** is a homelab Kubernetes cluster focused on learning through practical migration of Docker Compose applications to cloud-native patterns. Core mission: Transform Docker Compose-based homelab into production-ready Kubernetes environment with a learning-first approach.
+**Nezuko** is a homelab Kubernetes cluster focused on learning through practical migration of Docker
+Compose applications to cloud-native patterns. Core mission: Transform Docker Compose-based homelab
+into production-ready Kubernetes environment with a learning-first approach.
 
 ### Key Principles
 - **Learning-First**: Explain "why" behind every decision, use k9s for visualization
@@ -56,6 +58,96 @@
 3. **Extract** configuration into ConfigMaps and Secrets
 4. **Implement** with proper multi-node support
 5. **Validate** using k9s and functional testing
+
+## Docker Data Access
+
+### Standardized Mount Configuration
+
+**Mount Point**: `/mnt/docker-data` (standardized across all development platforms)
+
+**Source**: Unraid SMB share `//192.168.1.58/docker` (nezuko server)
+
+**Configuration**: Read-only access with persistent mounting
+
+### WSL2 (Windows) Setup
+
+**Mount Command**:
+```bash
+sudo mount -t cifs //192.168.1.58/docker /mnt/docker-data \
+  -o credentials=/etc/cifs-credentials/unraid,uid=1000,gid=1000,iocharset=utf8,ro,vers=3.1.1
+```
+
+**Permanent Configuration** (`/etc/fstab`):
+```
+//192.168.1.58/docker /mnt/docker-data cifs credentials=/etc/cifs-credentials/unraid,uid=1000,gid=1000,iocharset=utf8,ro,_netdev,noauto,x-systemd.automount,x-systemd.device-timeout=10 0 0
+```
+
+**Credentials File** (`/etc/cifs-credentials/unraid`):
+```
+username=[username]
+password=[password]
+domain=WORKGROUP
+```
+
+### Platform-Specific Mount Commands
+
+**macOS**:
+```bash
+sudo mkdir -p /mnt/docker-data
+sudo mount_smbfs -o ro //robert@192.168.1.58/docker /mnt/docker-data
+```
+
+**Linux**:
+```bash
+sudo mkdir -p /mnt/docker-data
+sudo mount -t cifs //192.168.1.58/docker /mnt/docker-data \
+  -o credentials=/etc/cifs-credentials/unraid,uid=1000,gid=1000,iocharset=utf8,ro
+```
+
+### Usage in Migration Analysis
+
+**Directory Structure**: `/mnt/docker-data/[service-name]/`
+- `docker-compose.yml` - Service configuration
+- `.env` - Environment variables (secrets and config)
+- `[data-directories]` - Persistent data and configuration files
+
+**Path Translation**: 
+- **Docker Compose References**: `/mnt/fast/docker` (Unraid host path)
+- **Claude Analysis Access**: `/mnt/docker-data` (development environment path)
+- When analyzing Docker configurations, translate any `/mnt/fast/docker` references to `/mnt/docker-data` for file access
+
+**Access Pattern**:
+1. Read Docker Compose file to understand service structure
+2. Examine bind mounts and volumes for data persistence patterns
+3. Extract environment variables and secrets
+4. Analyze configuration files for Kubernetes ConfigMap/Secret mapping
+
+**Security Notes**:
+- Mount is read-only to prevent accidental modification
+- Credentials stored securely in dedicated credentials file
+- Never commit SMB credentials to version control
+
+### Troubleshooting
+
+**Mount Issues**:
+```bash
+# Check current mounts
+mount | grep docker-data
+
+# Restart automount service
+sudo systemctl restart mnt-docker\\x2ddata.automount
+
+# Test network connectivity
+ping 192.168.1.58
+
+# Check SMB share availability
+smbclient -L 192.168.1.58 -U robert
+```
+
+**Permission Issues**:
+- Ensure user has proper uid/gid mapping (1000:1000)
+- Verify credentials file has correct permissions (600)
+- Check that credentials file is owned by correct user
 
 ## File Organization Standards
 
@@ -203,10 +295,10 @@ kubectl describe pvc pvc-name
 
 ## Memory Bank System
 
-A system for maintaining context across Claude Code sessions for long-running
-initiatives. Each initiative is tracked in a dedicated file that preserves progress,
-decisions, and current state.
+A system for maintaining context across Claude Code sessions for long-running initiatives. Each
+initiative is tracked in a dedicated file that preserves progress, decisions, and current state.
 
 @memory-bank/_system-docs.md
 
-Remember: This is a learning environment. Always explain the "why" behind decisions and prioritize understanding over quick fixes.
+Remember: This is a learning environment. Always explain the "why" behind decisions and prioritize
+understanding over quick fixes.
