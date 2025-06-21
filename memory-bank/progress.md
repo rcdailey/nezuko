@@ -8,12 +8,13 @@
 - **Core Documentation**: All six core memory bank files created and populated
 - **Learning Methodology**: Protective teaching approach documented and ready for implementation
 - **Cluster Assessment**: Comprehensive evaluation completed (June 19, 2025)
-- **Homer Migration**: Successfully migrated Homer dashboard to Kubernetes
-- **SWAG Integration**: Validated hybrid architecture with nginx-ingress + SWAG backend
-- **Storage Validation**: Confirmed Rook Ceph cluster fully operational
+- **Homer Migration**: Successfully migrated Homer dashboard to Kubernetes at `home.dailey.app`
+- **SWAG Integration**: Validated hybrid architecture with nginx-ingress + SWAG backend (catch-all routing)
+- **Storage Validation**: Confirmed Rook Ceph cluster fully operational (3 OSDs, 3 monitors, 2 managers)
+- **Migration Patterns**: Documented Docker→Kubernetes translation patterns with code examples
 
 ### 🔄 In Progress
-- **Memory Bank Updates**: Reflecting current cluster reality and migration progress
+- **Memory Bank Consolidation**: Cleaning up redundant files and consolidating progress information
 - **Next Migration Planning**: Evaluating cloudflared, uptime_kuma, and authentik candidates
 
 ### 📋 Ready for Implementation
@@ -143,6 +144,7 @@
 ### Maintenance Items
 - **Certificate Warning**: Node `nami` certificates expire in ~120 days (non-critical)
 - **Action Required**: Restart k3s on nami node to trigger automatic rotation
+- **Memory Bank Cleanup**: Consolidate redundant documentation files into single source of truth
 
 ## Lessons Learned (Updated June 19, 2025)
 
@@ -151,6 +153,49 @@
 - **Incremental Testing**: Apply changes step-by-step with validation
 - **Documentation**: Keep memory bank updated with new insights and patterns
 - **SWAG Integration**: Hybrid architecture enables gradual migration without service disruption
+
+### Docker to Kubernetes Translation Examples
+**Ingress Pattern**:
+```yaml
+# Docker Compose: labels for reverse proxy
+labels:
+  - "traefik.enable=true"
+  - "traefik.http.routers.app.rule=Host(`app.domain.com`)"
+
+# Kubernetes: Ingress resource
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+spec:
+  rules:
+  - host: app.dailey.app
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: app-service
+            port:
+              number: 80
+```
+
+**Volume Pattern**:
+```yaml
+# Docker Compose: bind mounts
+volumes:
+  - ./config:/app/config
+
+# Kubernetes: PVC mounts
+volumeMounts:
+- name: config-storage
+  mountPath: /app/config
+volumes:
+- name: config-storage
+  persistentVolumeClaim:
+    claimName: app-config-pvc
+```
 
 ### Tool Usage
 - **k9s Effectiveness**: Visual interface significantly improves learning experience
