@@ -201,4 +201,12 @@ kubectl get pvc -A
 kubectl describe pvc pvc-name
 ```
 
+## Memory Bank System
+
+A system for maintaining context across Claude Code sessions for long-running
+initiatives. Each initiative is tracked in a dedicated file that preserves progress,
+decisions, and current state.
+
+@memory-bank/_system-docs.md
+
 Remember: This is a learning environment. Always explain the "why" behind decisions and prioritize understanding over quick fixes.
