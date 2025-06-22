@@ -1,5 +1,193 @@
 # Nezuko Homelab Kubernetes Project
 
+## Quick Decision Matrix
+
+### Storage Decisions
+- **Need persistent data?** → Always PVC with `rook-ceph-block` storage class
+- **Stateful vs Stateless?** → Deployment for stateless, StatefulSet only when ordered deployment
+  needed
+- **Data location?** → Never node-local storage, always networked/distributed
+
+### Networking Decisions
+- **Internal communication?** → Services provide stable DNS endpoints
+- **External access?** → Ingress with `service.dailey.app` pattern
+- **Domain routing?** → `*.dailey.app` → SWAG (migration), specific domains → Kubernetes
+
+### Tool Selection
+- **Cluster exploration?** → k9s (primary), kubectl (fallback)
+- **Complex applications?** → Helmfile for Helm charts
+- **Resource deployment?** → `kubectl apply -k` with Kustomize
+- **Troubleshooting?** → k9s `:events` first, then `:pods`
+
+## Docker Data Access - CRITICAL OPERATIONAL INSTRUCTIONS
+
+### Environment Variable Configuration
+
+**Access Method**: `$DOCKER_DATA_PATH` environment variable (managed via chezmoi dotfiles)
+
+**Source**: Unraid SMB share `//192.168.1.58/docker` (nezuko server)
+
+**Configuration**: Read-only access with platform-native mounting
+
+### Claude Code Environment Variable Handling
+
+**CRITICAL: Environment Variable Expansion**
+- **Tool Limitation**: Claude Code tools (Read, Write, Edit, etc.) do NOT expand environment
+  variables
+- **Required Pattern**: Load `$DOCKER_DATA_PATH` value at start of first task execution
+- **Cache in Memory**: Store expanded path value for entire working session
+- **Explicit Path Construction**: Use cached value as prefix for all Docker data file operations
+
+**Implementation Requirements**:
+1. **First Task Execution**: Use `echo $DOCKER_DATA_PATH` via Bash tool to get actual path
+2. **Memory Storage**: Cache the returned path value (e.g., `/Volumes/docker` or `/mnt/docker-data`)
+3. **Path Construction**: Use cached prefix + `/service-name/file` for all file operations
+4. **Session Persistence**: Keep cached value available throughout the entire Claude session
+
+**Example Workflow**:
+```bash
+# First task - get actual path
+echo $DOCKER_DATA_PATH
+# Returns: /Volumes/docker (macOS) or /mnt/docker-data (Linux)
+
+# Use returned value for all subsequent file operations
+# Instead of: Read($DOCKER_DATA_PATH/uptime_kuma/docker-compose.yml)
+# Use: Read(/Volumes/docker/uptime_kuma/docker-compose.yml)
+```
+
+**Error Prevention**:
+- Never pass `$DOCKER_DATA_PATH` directly to Read, Write, Edit, or other file operation tools
+- Always resolve environment variable to actual path first
+- Fail fast if environment variable is not set or path doesn't exist
+
+### Platform-Specific Mount Setup
+
+**macOS**:
+```bash
+# Connect via Finder (handles authentication)
+open "smb://192.168.1.58"
+# OR: Manually connect via Finder > Go > Connect to Server > smb://192.168.1.58
+# Select the 'docker' share when prompted
+
+# Verify mount is active
+mount | grep 192.168.1.58
+ls /Volumes/docker
+
+# Environment variable (managed by chezmoi)
+export DOCKER_DATA_PATH="/Volumes/docker"
+```
+
+**Linux/WSL2**:
+```bash
+# Create mount point
+sudo mkdir -p /mnt/docker-data
+
+# Mount command
+sudo mount -t cifs //192.168.1.58/docker /mnt/docker-data \
+  -o credentials=/etc/cifs-credentials/unraid,uid=1000,gid=1000,iocharset=utf8,ro,vers=3.1.1
+
+# Environment variable (managed by chezmoi)
+export DOCKER_DATA_PATH="/mnt/docker-data"
+```
+
+**WSL2 Permanent Configuration** (`/etc/fstab`):
+```
+//192.168.1.58/docker /mnt/docker-data cifs credentials=/etc/cifs-credentials/unraid,uid=1000,gid=1000,iocharset=utf8,ro,_netdev,noauto,x-systemd.automount,x-systemd.device-timeout=10 0 0
+```
+
+**Credentials File** (`/etc/cifs-credentials/unraid`):
+```
+username=[username]
+password=[password]
+domain=WORKGROUP
+```
+
+### Usage in Migration Analysis
+
+**Directory Structure**: `$DOCKER_DATA_PATH/[service-name]/`
+- `docker-compose.yml` - Service configuration
+- `.env` - Environment variables (secrets and config)
+- `[data-directories]` - Persistent data and configuration files
+
+**Path Translation**:
+- **Docker Compose References**: `/mnt/fast/docker` (Unraid host path)
+- **Claude Analysis Access**: `$DOCKER_DATA_PATH` (platform-specific development path)
+- When analyzing Docker configurations, translate any `/mnt/fast/docker` references to
+  `$DOCKER_DATA_PATH` for file access
+
+**CRITICAL: Always Use Environment Variable**
+- **Never hard-code paths**: ALWAYS use `$DOCKER_DATA_PATH` prefix when referencing Docker data
+  locations
+- **Documentation**: All path references in memory bank, notes, and analysis must use
+  `$DOCKER_DATA_PATH/service-name/` format
+- **Migration Planning**: Data migration commands and path references must use environment variable
+- **Examples**:
+  - ✅ Correct: `$DOCKER_DATA_PATH/uptime_kuma/data/`
+  - ❌ Wrong: `/Volumes/docker/uptime_kuma/data/` (hard-coded macOS path)
+  - ❌ Wrong: `/mnt/docker-data/uptime_kuma/data/` (hard-coded Linux path)
+
+**Access Pattern**:
+1. Read Docker Compose file to understand service structure
+2. Examine bind mounts and volumes for data persistence patterns
+3. Extract environment variables and secrets
+4. Analyze configuration files for Kubernetes ConfigMap/Secret mapping
+
+**Security Notes**:
+- Mount is read-only to prevent accidental modification
+- Credentials stored securely in dedicated credentials file
+- Never commit SMB credentials to version control
+
+### Docker Data Troubleshooting
+
+**Mount Issues**:
+```bash
+# Check current mounts (adjust grep pattern for platform)
+mount | grep docker        # macOS: look for /Volumes/docker
+mount | grep docker-data   # Linux: look for /mnt/docker-data
+
+# Check environment variable
+echo $DOCKER_DATA_PATH
+
+# Test network connectivity
+ping 192.168.1.58
+
+# Check SMB share availability
+smbclient -L 192.168.1.58 -U robert
+
+# Platform-specific mount checks
+ls -la $DOCKER_DATA_PATH   # Should show docker container directories
+```
+
+**Permission Issues**:
+- Ensure user has proper uid/gid mapping (1000:1000)
+- Verify credentials file has correct permissions (600)
+- Check that credentials file is owned by correct user
+
+## File Organization Standards
+
+```
+_kubernetes/app-name/
+├── deployment.yaml      # Main application workload
+├── service.yaml         # Network access to pods
+├── ingress.yaml         # External HTTP/HTTPS access
+├── configmap.yaml       # Non-sensitive configuration
+├── secret.yaml          # Sensitive data (passwords, keys)
+├── pvc.yaml             # Persistent storage claims
+└── kustomization.yaml   # Groups resources together
+```
+
+## Tool Usage Hierarchy
+
+1. **k9s**: Primary tool for cluster exploration and learning
+   - Use for resource inspection, logs, troubleshooting
+   - Preferred over kubectl for visualization and learning
+2. **Helmfile**: Declarative Helm release management
+   - Use for complex applications requiring Helm charts
+   - Preferred over Helm CLI commands
+3. **Kustomize**: Resource grouping with `kubectl apply -k`
+   - Use for deploying related resources together
+4. **kubectl**: Direct commands only when other tools insufficient
+
 ## Project Overview
 
 **Nezuko** is a homelab Kubernetes cluster focused on learning through practical migration of Docker
@@ -59,161 +247,65 @@ into production-ready Kubernetes environment with a learning-first approach.
 4. **Implement** with proper multi-node support
 5. **Validate** using k9s and functional testing
 
-## Docker Data Access
+## Command Reference
 
-### Environment Variable Configuration
-
-**Access Method**: `$DOCKER_DATA_PATH` environment variable (managed via chezmoi dotfiles)
-
-**Source**: Unraid SMB share `//192.168.1.58/docker` (nezuko server)
-
-**Configuration**: Read-only access with platform-native mounting
-
-### Platform-Specific Mount Setup
-
-**macOS**:
+### Cluster Management Commands
 ```bash
-# Connect via Finder (handles authentication)
-open "smb://192.168.1.58"
-# OR: Manually connect via Finder > Go > Connect to Server > smb://192.168.1.58
-# Select the 'docker' share when prompted
+# Apply grouped resources
+kubectl apply -k _kubernetes/app-name/
 
-# Verify mount is active
-mount | grep 192.168.1.58
-ls /Volumes/docker
+# Check cluster status with k9s
+k9s
 
-# Environment variable (managed by chezmoi)
-export DOCKER_DATA_PATH="/Volumes/docker"
+# View specific resource types
+kubectl get pods -A
+kubectl get pvc -A
+kubectl get ingress -A
+
+# View events (troubleshooting)
+kubectl get events --sort-by='.metadata.creationTimestamp'
 ```
 
-**Linux/WSL2**:
-```bash
-# Create mount point
-sudo mkdir -p /mnt/docker-data
-
-# Mount command
-sudo mount -t cifs //192.168.1.58/docker /mnt/docker-data \
-  -o credentials=/etc/cifs-credentials/unraid,uid=1000,gid=1000,iocharset=utf8,ro,vers=3.1.1
-
-# Environment variable (managed by chezmoi)
-export DOCKER_DATA_PATH="/mnt/docker-data"
-```
-
-**WSL2 Permanent Configuration** (`/etc/fstab`):
-```
-//192.168.1.58/docker /mnt/docker-data cifs credentials=/etc/cifs-credentials/unraid,uid=1000,gid=1000,iocharset=utf8,ro,_netdev,noauto,x-systemd.automount,x-systemd.device-timeout=10 0 0
-```
-
-**Credentials File** (`/etc/cifs-credentials/unraid`):
-```
-username=[username]
-password=[password]
-domain=WORKGROUP
-```
-
-### Usage in Migration Analysis
-
-**Directory Structure**: `$DOCKER_DATA_PATH/[service-name]/`
-- `docker-compose.yml` - Service configuration
-- `.env` - Environment variables (secrets and config)
-- `[data-directories]` - Persistent data and configuration files
-
-**Path Translation**: 
-- **Docker Compose References**: `/mnt/fast/docker` (Unraid host path)
-- **Claude Analysis Access**: `$DOCKER_DATA_PATH` (platform-specific development path)
-- When analyzing Docker configurations, translate any `/mnt/fast/docker` references to `$DOCKER_DATA_PATH` for file access
-
-**CRITICAL: Always Use Environment Variable**
-- **Never hard-code paths**: ALWAYS use `$DOCKER_DATA_PATH` prefix when referencing Docker data locations
-- **Documentation**: All path references in memory bank, notes, and analysis must use `$DOCKER_DATA_PATH/service-name/` format
-- **Migration Planning**: Data migration commands and path references must use environment variable
-- **Examples**: 
-  - ✅ Correct: `$DOCKER_DATA_PATH/uptime_kuma/data/`
-  - ❌ Wrong: `/Volumes/docker/uptime_kuma/data/` (hard-coded macOS path)
-  - ❌ Wrong: `/mnt/docker-data/uptime_kuma/data/` (hard-coded Linux path)
-
-**Access Pattern**:
-1. Read Docker Compose file to understand service structure
-2. Examine bind mounts and volumes for data persistence patterns
-3. Extract environment variables and secrets
-4. Analyze configuration files for Kubernetes ConfigMap/Secret mapping
-
-**Security Notes**:
-- Mount is read-only to prevent accidental modification
-- Credentials stored securely in dedicated credentials file
-- Never commit SMB credentials to version control
-
-### Troubleshooting
-
-**Mount Issues**:
-```bash
-# Check current mounts (adjust grep pattern for platform)
-mount | grep docker        # macOS: look for /Volumes/docker
-mount | grep docker-data   # Linux: look for /mnt/docker-data
-
-# Check environment variable
-echo $DOCKER_DATA_PATH
-
-# Test network connectivity
-ping 192.168.1.58
-
-# Check SMB share availability
-smbclient -L 192.168.1.58 -U robert
-
-# Platform-specific mount checks
-ls -la $DOCKER_DATA_PATH   # Should show docker container directories
-```
-
-**Permission Issues**:
-- Ensure user has proper uid/gid mapping (1000:1000)
-- Verify credentials file has correct permissions (600)
-- Check that credentials file is owned by correct user
-
-## File Organization Standards
-
-```
-_kubernetes/app-name/
-├── deployment.yaml      # Main application workload
-├── service.yaml         # Network access to pods
-├── ingress.yaml         # External HTTP/HTTPS access
-├── configmap.yaml       # Non-sensitive configuration
-├── secret.yaml          # Sensitive data (passwords, keys)
-├── pvc.yaml             # Persistent storage claims
-└── kustomization.yaml   # Groups resources together
-```
-
-## Tool Usage Hierarchy
-
-1. **k9s**: Primary tool for cluster exploration and learning
-   - Use for resource inspection, logs, troubleshooting
-   - Preferred over kubectl for visualization and learning
-2. **Helmfile**: Declarative Helm release management
-   - Use for complex applications requiring Helm charts
-   - Preferred over Helm CLI commands
-3. **Kustomize**: Resource grouping with `kubectl apply -k`
-   - Use for deploying related resources together
-4. **kubectl**: Direct commands only when other tools insufficient
-
-## Essential k9s Commands
-
-### Navigation
+### k9s Navigation and Actions
+**Navigation**:
 - `:resource` - View specific resources (`:pods`, `:deploy`, `:svc`, `:pvc`)
 - `:workload` - View all workload resources in one view
 - `:events` - View cluster events (great for troubleshooting)
 - `/filter` - Filter resources by name or label
 
-### Resource Actions
+**Resource Actions**:
 - `d` - Describe selected resource (detailed information)
 - `y` - View YAML manifest of selected resource
 - `l` - View logs (for pods and containers)
 - `s` - Shell into pod or scale deployment
 - `f` - Port-forward to selected service/pod
 
-### Troubleshooting Workflow
+**k9s Troubleshooting Workflow**:
 1. Check `:events` for recent issues
 2. Use `:pods` to identify problematic pods
 3. View logs with `l` on failing pods
 4. Describe resources with `d` to understand configuration
+
+### Application Testing Commands
+```bash
+# Check logs
+kubectl logs -f deployment/app-name
+
+# Port forward for testing
+kubectl port-forward svc/app-service 8080:80
+```
+
+### Storage Operations Commands
+```bash
+# List storage classes
+kubectl get storageclass
+
+# Check PVC status
+kubectl get pvc -A
+
+# Describe storage issues
+kubectl describe pvc pvc-name
+```
 
 ## Configuration Standards
 
@@ -233,6 +325,11 @@ _kubernetes/app-name/
 - **Services**: Stable network endpoints for pod communication
 - **Ingress**: External HTTP/HTTPS access with TLS
 
+### Health Patterns
+- **Readiness Probes**: When pod is ready to receive traffic
+- **Liveness Probes**: When pod should be restarted
+- **Startup Probes**: For slow-starting containers
+
 ## Development Workflow
 
 ### Deployment Process
@@ -247,11 +344,6 @@ _kubernetes/app-name/
 - Ask "Do you want me to implement this?" before any changes
 - Never create, edit, or modify files without explicit approval
 - This protects the learning environment from unintended changes
-
-### Health Patterns
-- **Readiness Probes**: When pod is ready to receive traffic
-- **Liveness Probes**: When pod should be restarted
-- **Startup Probes**: For slow-starting containers
 
 ## Learning Methodology
 
@@ -272,46 +364,6 @@ _kubernetes/app-name/
 - Using documentation examples without verifying local configuration
 - Implementing complex solutions when simple ones suffice
 - Bypassing safety mechanisms for convenience
-
-## Frequently Used Commands
-
-### Cluster Management
-```bash
-# Apply grouped resources
-kubectl apply -k _kubernetes/app-name/
-
-# Check cluster status with k9s
-k9s
-
-# View specific resource types
-kubectl get pods -A
-kubectl get pvc -A
-kubectl get ingress -A
-```
-
-### Troubleshooting
-```bash
-# View events
-kubectl get events --sort-by='.metadata.creationTimestamp'
-
-# Check logs
-kubectl logs -f deployment/app-name
-
-# Port forward for testing
-kubectl port-forward svc/app-service 8080:80
-```
-
-### Storage Operations
-```bash
-# List storage classes
-kubectl get storageclass
-
-# Check PVC status
-kubectl get pvc -A
-
-# Describe storage issues
-kubectl describe pvc pvc-name
-```
 
 ## Memory Bank System
 
