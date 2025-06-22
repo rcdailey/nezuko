@@ -1,0 +1,71 @@
+# Rook Ceph Cluster Configuration for Multi-Node Homelab
+# Production-ready distributed storage across 3 nodes (nami, lucy, marin)
+# Following KISS principle - start simple, add complexity only when needed
+
+apiVersion: ceph.rook.io/v1
+kind: CephCluster
+metadata:
+  name: rook-ceph
+  namespace: rook-ceph
+spec:
+  # Ceph version to deploy - matches Rook v1.17.4
+  cephVersion:
+    image: quay.io/ceph/ceph:v19.2.2 # Latest stable Ceph compatible with Rook v1.17.4
+    allowUnsupported: false
+
+  # Data directory on each node where Ceph stores its metadata
+  dataDirHostPath: /var/lib/rook
+
+  # MON (Monitor) configuration - these coordinate the cluster
+  mon:
+    count: 3 # Three monitors for multi-node HA (one per node)
+    allowMultiplePerNode: false # Production setting - one monitor per node
+    # PVC template for monitor storage
+    volumeClaimTemplate:
+      spec:
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 5Gi
+        volumeMode: Filesystem # Monitors need filesystem mode
+        accessModes:
+        - ReadWriteOnce
+
+  # MGR (Manager) configuration - provides monitoring and management
+  mgr:
+    count: 2 # Two managers for redundancy
+    allowMultiplePerNode: false
+
+  # Dashboard configuration (Web UI for monitoring)  # Dashboard configuration (Web UI for monitoring)
+  dashboard:
+    enabled: true
+
+  # Cleanup policy for better resource management
+  cleanupPolicy:
+    confirmation: ""
+    sanitizeDisks:
+      method: quick
+      dataSource: zero
+      iteration: 1
+    allowUninstallWithVolumes: false
+  # Storage configuration - using raw devices across three nodes
+  storage:
+    useAllNodes: false
+    useAllDevices: false
+    # Direct device specification for optimal performance
+    nodes:
+    - name: lucy
+      devices:
+      - name: /dev/nvme0n1
+        config:
+          osdsPerDevice: "1"
+    - name: marin
+      devices:
+      - name: /dev/ubuntu-vg/ceph-osd-1
+        config:
+          osdsPerDevice: "1"
+    - name: nami
+      devices:
+      - name: /dev/sdb
+        config:
+          osdsPerDevice: "1"

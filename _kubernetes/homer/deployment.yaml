@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homer
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: homer
+  template:
+    metadata:
+      labels:
+        app: homer
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+      - name: homer
+        image: b4bz/homer:v25.05.2
+        resources:
+          requests:
+            memory: 64Mi
+            cpu: 250m
+          limits:
+            memory: 128Mi
+            cpu: 500m
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        env:
+        - name: TZ
+          value: "America/Chicago"
+        volumeMounts:
+        - name: homer-assets
+          mountPath: /www/assets
+        - name: homer-config
+          mountPath: /www/assets/config.yml
+          subPath: config.yml
+      volumes:
+      - name: homer-assets
+        persistentVolumeClaim:
+          claimName: homer-assets
+      - name: homer-config
+        configMap:
+          name: homer-config

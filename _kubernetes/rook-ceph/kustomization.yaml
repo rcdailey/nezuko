@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Apply resources in the correct order
+# 1. First create the cluster (this takes time)
+# 2. Then create the block pool
+# 3. Finally create storage classes that use the pool
+resources:
+- cluster.yaml
+- block-pool.yaml
+- storage-classes.yaml
+- toolbox.yaml
+
+# Namespace for all resources
+namespace: rook-ceph
+
+# Common labels for resource tracking
+# These help identify resources that belong to this deployment
+labels:
+- includeSelectors: true
+  pairs:
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/name: rook-ceph
