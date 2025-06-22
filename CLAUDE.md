@@ -123,6 +123,15 @@ domain=WORKGROUP
 - **Claude Analysis Access**: `$DOCKER_DATA_PATH` (platform-specific development path)
 - When analyzing Docker configurations, translate any `/mnt/fast/docker` references to `$DOCKER_DATA_PATH` for file access
 
+**CRITICAL: Always Use Environment Variable**
+- **Never hard-code paths**: ALWAYS use `$DOCKER_DATA_PATH` prefix when referencing Docker data locations
+- **Documentation**: All path references in memory bank, notes, and analysis must use `$DOCKER_DATA_PATH/service-name/` format
+- **Migration Planning**: Data migration commands and path references must use environment variable
+- **Examples**: 
+  - ✅ Correct: `$DOCKER_DATA_PATH/uptime_kuma/data/`
+  - ❌ Wrong: `/Volumes/docker/uptime_kuma/data/` (hard-coded macOS path)
+  - ❌ Wrong: `/mnt/docker-data/uptime_kuma/data/` (hard-coded Linux path)
+
 **Access Pattern**:
 1. Read Docker Compose file to understand service structure
 2. Examine bind mounts and volumes for data persistence patterns

@@ -209,3 +209,31 @@ migrated (homer), 48 remaining.
 - SWAG remains as backend for hybrid architecture (not migrated)
 - Focus on learning progression: single services → multi-service → complex stacks
 - Each migration builds foundational patterns for increasingly complex deployments
+
+### 2024-06-22 - Next Migration Analysis: Uptime Kuma vs Gatus Decision Point
+
+Analyzed second migration target options and identified significant strategic decision between Uptime Kuma (existing service) and Gatus (cloud-native alternative).
+
+**Uptime Kuma Analysis Completed**:
+- **Current State**: 2.2GB SQLite database with extensive monitoring history at `$DOCKER_DATA_PATH/uptime_kuma/data/`
+- **Migration Complexity**: Requires careful data migration, container downtime, rollback complexity
+- **Technical Debt**: Docker-centric architecture not optimized for Kubernetes patterns
+- **Learning Value**: Limited - focuses on legacy data migration rather than cloud-native patterns
+- **Resource Requirements**: Node.js + SQLite stack with higher memory footprint
+
+**Gatus Alternative Identified**:
+- **Cloud-native Design**: Built for Kubernetes from ground up with modern architecture
+- **Configuration-as-Code**: YAML-based configuration perfect for ConfigMaps practice
+- **Stateless Option**: Can run without persistent storage, or with lightweight persistence
+- **Learning Benefits**: Pure Kubernetes patterns, modern monitoring approaches, alerting integrations
+- **Migration Simplicity**: Fresh deployment vs complex data migration with downtime risk
+- **Resource Efficiency**: Much smaller footprint, faster startup times
+
+**Strategic Decision Point**: 
+Choose between preserving existing monitoring history (Uptime Kuma complex migration) vs superior educational value and cleaner architecture (Gatus fresh start). Gatus offers better learning experience with Kubernetes-native patterns and eliminates migration complexity.
+
+**Architecture Considerations**:
+- **Gatus Deployment Options**: Stateless ConfigMap-only, lightweight SQLite persistence, or external database integration
+- **Alerting Integration**: Webhook notifications to Discord/Slack for homelab monitoring
+- **Configuration Management**: Advanced ConfigMap patterns for complex monitoring configurations
+- **Future Scalability**: Better foundation for advanced monitoring patterns
