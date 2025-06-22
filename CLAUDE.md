@@ -61,23 +61,45 @@ into production-ready Kubernetes environment with a learning-first approach.
 
 ## Docker Data Access
 
-### Standardized Mount Configuration
+### Environment Variable Configuration
 
-**Mount Point**: `/mnt/docker-data` (standardized across all development platforms)
+**Access Method**: `$DOCKER_DATA_PATH` environment variable (managed via chezmoi dotfiles)
 
 **Source**: Unraid SMB share `//192.168.1.58/docker` (nezuko server)
 
-**Configuration**: Read-only access with persistent mounting
+**Configuration**: Read-only access with platform-native mounting
 
-### WSL2 (Windows) Setup
+### Platform-Specific Mount Setup
 
-**Mount Command**:
+**macOS**:
 ```bash
-sudo mount -t cifs //192.168.1.58/docker /mnt/docker-data \
-  -o credentials=/etc/cifs-credentials/unraid,uid=1000,gid=1000,iocharset=utf8,ro,vers=3.1.1
+# Connect via Finder (handles authentication)
+open "smb://192.168.1.58"
+# OR: Manually connect via Finder > Go > Connect to Server > smb://192.168.1.58
+# Select the 'docker' share when prompted
+
+# Verify mount is active
+mount | grep 192.168.1.58
+ls /Volumes/docker
+
+# Environment variable (managed by chezmoi)
+export DOCKER_DATA_PATH="/Volumes/docker"
 ```
 
-**Permanent Configuration** (`/etc/fstab`):
+**Linux/WSL2**:
+```bash
+# Create mount point
+sudo mkdir -p /mnt/docker-data
+
+# Mount command
+sudo mount -t cifs //192.168.1.58/docker /mnt/docker-data \
+  -o credentials=/etc/cifs-credentials/unraid,uid=1000,gid=1000,iocharset=utf8,ro,vers=3.1.1
+
+# Environment variable (managed by chezmoi)
+export DOCKER_DATA_PATH="/mnt/docker-data"
+```
+
+**WSL2 Permanent Configuration** (`/etc/fstab`):
 ```
 //192.168.1.58/docker /mnt/docker-data cifs credentials=/etc/cifs-credentials/unraid,uid=1000,gid=1000,iocharset=utf8,ro,_netdev,noauto,x-systemd.automount,x-systemd.device-timeout=10 0 0
 ```
@@ -89,32 +111,17 @@ password=[password]
 domain=WORKGROUP
 ```
 
-### Platform-Specific Mount Commands
-
-**macOS**:
-```bash
-sudo mkdir -p /mnt/docker-data
-sudo mount_smbfs -o ro //robert@192.168.1.58/docker /mnt/docker-data
-```
-
-**Linux**:
-```bash
-sudo mkdir -p /mnt/docker-data
-sudo mount -t cifs //192.168.1.58/docker /mnt/docker-data \
-  -o credentials=/etc/cifs-credentials/unraid,uid=1000,gid=1000,iocharset=utf8,ro
-```
-
 ### Usage in Migration Analysis
 
-**Directory Structure**: `/mnt/docker-data/[service-name]/`
+**Directory Structure**: `$DOCKER_DATA_PATH/[service-name]/`
 - `docker-compose.yml` - Service configuration
 - `.env` - Environment variables (secrets and config)
 - `[data-directories]` - Persistent data and configuration files
 
 **Path Translation**: 
 - **Docker Compose References**: `/mnt/fast/docker` (Unraid host path)
-- **Claude Analysis Access**: `/mnt/docker-data` (development environment path)
-- When analyzing Docker configurations, translate any `/mnt/fast/docker` references to `/mnt/docker-data` for file access
+- **Claude Analysis Access**: `$DOCKER_DATA_PATH` (platform-specific development path)
+- When analyzing Docker configurations, translate any `/mnt/fast/docker` references to `$DOCKER_DATA_PATH` for file access
 
 **Access Pattern**:
 1. Read Docker Compose file to understand service structure
@@ -131,17 +138,21 @@ sudo mount -t cifs //192.168.1.58/docker /mnt/docker-data \
 
 **Mount Issues**:
 ```bash
-# Check current mounts
-mount | grep docker-data
+# Check current mounts (adjust grep pattern for platform)
+mount | grep docker        # macOS: look for /Volumes/docker
+mount | grep docker-data   # Linux: look for /mnt/docker-data
 
-# Restart automount service
-sudo systemctl restart mnt-docker\\x2ddata.automount
+# Check environment variable
+echo $DOCKER_DATA_PATH
 
 # Test network connectivity
 ping 192.168.1.58
 
 # Check SMB share availability
 smbclient -L 192.168.1.58 -U robert
+
+# Platform-specific mount checks
+ls -la $DOCKER_DATA_PATH   # Should show docker container directories
 ```
 
 **Permission Issues**:
