@@ -87,7 +87,7 @@ services:
       - ./vectordb_pg16:/var/lib/postgresql/data
 
   rag_api:
-    image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:v0.5.0
+    image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:v0.6.0
     restart: unless-stopped
     depends_on: [vectordb]
     logging: *default-logging
