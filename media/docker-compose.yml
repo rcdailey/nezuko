@@ -52,7 +52,7 @@ services:
 
   #########################################################################
   sabnzbd:
-    image: ghcr.io/hotio/sabnzbd:release-4.5.1
+    image: ghcr.io/hotio/sabnzbd:release-4.5.2
     restart: unless-stopped
     container_name: sabnzbd
     logging: *logging
@@ -276,7 +276,7 @@ services:
 
   #########################################################################
   tautulli:
-    image: ghcr.io/hotio/tautulli:release-2.15.2
+    image: ghcr.io/hotio/tautulli:release-2.15.3
     restart: unless-stopped
     container_name: tautulli
     logging: *logging
