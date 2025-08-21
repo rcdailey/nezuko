@@ -3,7 +3,7 @@ name: filerun
 networks:
   reverse_proxy:
     external: true
-    driver: overlay
+    # driver: overlay
   borgmatic_backup:
     external: true
 

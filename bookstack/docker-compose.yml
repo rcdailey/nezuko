@@ -1,0 +1,46 @@
+name: bookstack
+
+networks:
+  reverse_proxy:
+    external: true
+    # driver: overlay
+
+services:
+  app:
+    image: ghcr.io/linuxserver/bookstack
+    restart: unless-stopped
+    container_name: bookstack
+    networks:
+      - default
+      - reverse_proxy
+    # ports:
+    #   - 6875:80
+    volumes:
+      - ./config:/config
+    depends_on: [db]
+    env_file: .env
+    environment:
+      - TZ=America/Chicago
+      - PUID=$DOCKER_UID
+      - PGID=$DOCKER_GID
+      - DB_HOST=db
+      - DB_USER=bookstack
+      - DB_PASS=bookstack
+      - DB_DATABASE=bookstackapp
+    labels:
+      - swag=enable
+      - swag_url=wiki.*
+
+  db:
+    image: ghcr.io/linuxserver/mariadb
+    restart: unless-stopped
+    volumes:
+      - ./db:/config
+    environment:
+      - TZ=America/Chicago
+      - PUID=$DOCKER_UID
+      - PGID=$DOCKER_GID
+      - MYSQL_ROOT_PASSWORD=bookstack
+      - MYSQL_DATABASE=bookstackapp
+      - MYSQL_USER=bookstack
+      - MYSQL_PASSWORD=bookstack
