@@ -1,0 +1,21 @@
+x-logging: &logging
+  driver: json-file
+  options:
+    max-file: "1"
+    max-size: "50m"
+
+services:
+  garage:
+    image: dxflrs/garage:v2.0.0
+    restart: unless-stopped
+    container_name: garage
+    logging: *logging
+    ports:
+      - 3900:3900
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./config:/etc
+      - ./metadata:/var/lib/garage/meta
+      - /mnt/user/s3:/var/lib/garage/data
+    environment:
+      - TZ=America/Chicago
