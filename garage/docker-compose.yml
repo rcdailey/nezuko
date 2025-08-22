@@ -12,9 +12,10 @@ services:
     logging: *logging
     ports:
       - 3900:3900
+      - 3901:3901
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./config:/etc
+      - ./garage.toml:/etc/garage.toml
       - ./metadata:/var/lib/garage/meta
       - /mnt/user/s3:/var/lib/garage/data
     environment:
