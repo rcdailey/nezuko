@@ -76,7 +76,7 @@ services:
     logging: *logging
 
   esearch:
-    image: elasticsearch:8.18.2
+    image: elasticsearch:8.19.1
     restart: unless-stopped
     hostname: elasticsearch
     logging: *logging
