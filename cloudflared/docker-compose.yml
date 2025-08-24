@@ -1,6 +1,6 @@
 services:
   app:
-    image: cloudflare/cloudflared:2025.6.1
+    image: cloudflare/cloudflared:2025.8.0
     container_name: cloudflared
     network_mode: host
     restart: unless-stopped
